@@ -1,0 +1,1 @@
+This repository is where Steve Sweitzer keeps all the various Terra Dotta Software/StudioAbroad hacks that he has posted to http://sweitzephrenia.com
