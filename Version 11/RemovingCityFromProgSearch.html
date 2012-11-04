@@ -1,0 +1,15 @@
+<script language="JavaScript" type="text/javascript">
+	// add this script to text interface# 402 - Simple search tips
+	$(document).ready(function(){
+		$("label:contains('City')").remove();
+		$('#selProgCity').nextUntil('label').remove();
+		$('#selProgCity').remove();
+	});
+</script>
+
+<script language="JavaScript" type="text/javascript">
+	// add this script to text interface# 415 - Advanced search tips
+	$(document).ready(function(){
+		$("#selProgCity").parent().parent().remove();
+	});
+</script>
