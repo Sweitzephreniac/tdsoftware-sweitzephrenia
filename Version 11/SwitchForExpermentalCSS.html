@@ -1,0 +1,20 @@
+<!-- This block of code goes in interface field#6675 -->
+<style id="customcss"></style>
+<script>
+if($.cookie("css")=='yes') {
+$("style[id='customcss']").html("#mainContainerInside { box-shadow: 0px 0px 25px #000; }");
+}
+</script>
+
+<!-- This block of code goes in interface field#6511 -->
+<ul id="altcss">
+<li><a href="#" rel="no">Default CSS</a></li>
+<li><a href="#" rel="yes">Experimental CSS</a></li>
+</ul>
+<script type="text/javascript" language="javascript">
+$(document).ready(function() { 
+$("#altcss li a").click(function() {
+$.cookie("css",$(this).attr('rel'), {expires: 365, path: '/'});
+});
+});
+</script>
