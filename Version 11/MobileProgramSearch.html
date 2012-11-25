@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        
+        <title>
+        Mobile Program Search
+        </title>
+        
+        <!-- This link tag loads in the jquery mobile stylesheet -->
+        
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+        
+        <!-- This link tag loads in the font that is used in the header of the program detail display -->
+        
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css' />
+        
+        <!-- These are the custom style overrides -->
+        
+        <style>       
+            .ui-shadow {
+            	-moz-box-shadow:0 0px 10px rgba(0,0,0,1);
+            	-webkit-box-shadow: 0 0px 10px rgba(0, 0, 0, 1);
+            	box-shadow: 0 0px 10px rgba(0, 0, 0, 1);
+            }
+            .ui-title {
+            	margin: 0.6em 15% 0.8em !important;
+            }
+            .active-tab {
+            	background-image:-webkit-gradient(linear,left top,left bottom,from(#5393c5),to(#6facd5));
+       			background-image:-webkit-linear-gradient(#5393c5,#6facd5);
+       			background-image:-moz-linear-gradient(#5393c5,#6facd5);
+       			background-image:-ms-linear-gradient(#5393c5,#6facd5);
+       			background-image:-o-linear-gradient(#5393c5,#6facd5);
+       			background-image:linear-gradient(#5393c5,#6facd5);
+       			font-weight:bold;
+       			color:#fff;
+       			text-shadow:0 1px 1px #3373a5;
+            }
+            .brochure-top {
+            	font-family: 'Source Sans Pro', sans-serif;
+            }
+        </style>
+
+        <!-- If you want to have an icon and startup image when this is made a homescreen web app on iOS device, you can uncomment these two link lines and put in the URLs of the images to be used
+        
+        <link rel="#URL FOR THE ICON IMAGE YOU WANT TO USE ON IOS DEVICES#" />
+        <link rel="#URL FOR THE LOADING IMAGE YOU WANT TO USE ON IOS DEVICES#">
+        
+         -->
+         
+        <!-- These two lines load in jquery and the jquery mobile javascripts -->
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+        </script>
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery.mobile/1.1.1/jquery.mobile-1.1.1.min.js">
+        </script>
+    
+    </head>
+    <body>
+    
+        <!-- Program Search Page -->
+        
+        <div data-role="page" id="page1">
+        
+        	<!-- Fixed Header -->
+        
+            <div data-theme="a" data-role="header" data-position="fixed">
+                <h3>
+                    Program Search
+                </h3>
+			</div>
+						
+            <div data-role="content" style="padding: 15px">
+            
+            	<!-- Program Search Instructions -->
+            
+                <div id="instructions">
+                	<p>Welcome to the mobile-friendly program search. This is a work in progress to build an easy to navigate public program search using the jquery mobile UI framework and the Terra Dotta Software Version 11 API.</p>
+        		</div>
+        		
+        		<!-- Program Search Country Drop-Down Input -->
+        		
+                <div data-role="fieldcontain" style="display: none; text-align: center" id="searchoptions">
+                    <select name="selectmenu1" id="selectmenu1">
+                        <option value="loading">
+                            - select a country -
+                        </option>
+                    </select>
+                </div>
+                
+                <!-- Program Search Results -->
+                
+                <ul data-role="listview" data-divider-theme="b" data-inset="true" style="display: none;" id="searchresults">
+                    <li data-role="list-divider" role="heading">
+                        Search Results
+                    </li>
+                </ul>
+                
+            </div>
+            
+            <!-- This hidden div was used with the old method of fetching search results it is left in the code for sentimental reasons
+            
+            <div style="display: none;" id="rawsearchresults">
+            </div>
+            
+            -->
+            
+        </div>
+	
+    <!-- Program Brochure Page -->	
+	
+	<div data-role="page" id="page2" data-theme="c" data-content-theme="c">
+    	<div data-role="content" style="padding: 15px">
+    	    
+    	    <!-- Fixed Header -->
+    	    
+    	    <div data-theme="a" data-role="header" data-position="fixed">
+        		<h3>
+                    Program Information
+                </h3>
+			</div>
+			
+			<!-- Program Name and Location Section -->
+			
+        	<div data-role="content">
+        		<center>
+	        	<h2 id="programname" class="brochure-top">
+    	        	Program Name
+        		</h2>
+        		<h4 id="programlocations" class="brochure-top">
+            		Program Locations
+        		</h4>
+        		</center>
+    		</div>
+    		
+    		<!-- Navigation Buttons -->
+    		
+        	<div data-role="controlgroup" data-type="horizontal" data-mini="true">
+        		</br>
+        		<a href="javascript:void(0);" onclick="showProgramSection('programparameters')" class="nav-tab active-tab" id="programparametersbutton" data-role="button">Info</a>
+				<a href="javascript:void(0);" onclick="showProgramSection('programmap')" class="nav-tab" id="programmapbutton" data-role="button">Map</a>
+				<a href="javascript:void(0);" onclick="showProgramSection('programterms')" class="nav-tab" id="programtermsbutton" data-role="button">Terms</a>
+				<a href="javascript:void(0);" onclick="showProgramSection('programbrochure')" class="nav-tab" id="programbrochurebutton" data-role="button">Description</a>
+				</br></br>
+			</div>
+
+			<!-- Program Brochure Page Containers -->
+
+			<div class="programtab" id="programparameterscontainer" style="display: block;">
+			  	<div id="programparameters">
+        		</div>
+			</div>
+
+			<div class="programtab" id="programmapcontainer" style="display: none;">
+			  	<div id="programmap">
+        		</div>
+			</div>
+
+			<div class="programtab" id="programtermscontainer" style="display: none;">
+			  	<div id="programterms">
+        		</div>
+			</div>
+
+			<div class="programtab" id="programbrochurecontainer" style="display: none;">
+			  	<div id="programbrochure">
+        		</div>
+			</div>
+
+			<!-- Email the brochure page URL Button -->
+			
+			</br>
+			<a data-role="button" onclick="emailBrochure()" href="javascript:void(0);" id="emailbutton">
+				Email this Program URL
+			</a>
+
+			<!-- Return to Search Button -->
+
+        	</br>
+        	<a data-role="button" data-direction="reverse" data-rel="back" data-transition="fade" href="#page1">
+            	Back To Search Results
+        	</a>
+        	
+    	</div>
+	</div>
+	
+	<script>
+			
+		// INITIALIZATION ROUTINES
+		
+		// Assign the proper site domain and path for the account this is being installed on
+		
+		var sitedomain = "http://#PUT YOUR DOMAIN HERE#"
+			
+		// We get the list of countries from the site's simple search form
+			
+		/*  This code was the old jquery way that I would fetch the countries, but now it uses the API. I just kept this here to remind me of the past *le sigh*
+		
+		var docurl = sitedomain + "index.cfm?FuseAction=Programs.SimpleSearch #selProgCntry > Option";
+		$('#selectmenu1').load(docurl, function() {
+        	$("option:contains('Any')").remove();
+            $('#searchoptions').css("display", "block");
+        });
+        
+        */
+
+		$.getJSON(sitedomain + "api/index.cfm/?callname=getProgramSearchElements&country=yes&responseEncoding=json&callBackName=addSearchCountries&jsoncallback=?");
+		
+		// We set up the drop-down menu so that it will fetch search results when changed
+			
+		$('#selectmenu1').change(function() {
+        	var selected_value = $("#selectmenu1").val();
+        	selected_value = selected_value.replace(/ /g,"+");
+    	    $('#selectmenu1').blur();
+    	    $('#searchresults').css("display", "none");
+        	$.mobile.showPageLoadingMsg();
+        	$('#searchresults > li.ui-btn').empty().remove();
+        	
+        	/* This code was the old jquery way that I would fetch the search results, but now it uses the API. I just kept this here to remind me of the past *le sigh*
+        	
+        	$('#rawsearchresults').load(sitedomain + 'index.cfm?Program_Type_ID=O&pc=' + selected_value + '%7F&FuseAction=Programs.SearchResults #data-container', function () {
+            	$('#rawsearchresults a[href*=ViewProgram]').each(function(index) {
+            		var name = $(this).text();
+            		var progid = $(this).attr("href");
+            		progid = progid.replace("index.cfm?FuseAction=Programs.ViewProgram&Program_ID=", "");
+            		$('#searchresults').append('<li data-icon="false"><a data-ajax="false" href=\"javascript:void(0);\" onclick=\"loadBrochure(\'' + progid + '\');\">' + name + '</a></li>');
+                	});
+                $('#searchresults').listview('refresh');
+                $.mobile.hidePageLoadingMsg();
+                $('#searchresults').css("display", "block");
+                
+            });
+            
+            */
+        	
+        	$.getJSON(sitedomain + "api/index.cfm/?callname=getProgramSearchResults&responseEncoding=json&Country=" + selected_value + "&callBackName=parseSearchResults&jsoncallback=?");
+        	
+        });
+            
+        // FUNCTIONS
+        
+        // This function is the callback from the API call that fetches, parses, builds, and reveals program brochure content
+        
+        function _cb_parseBrochure(data) {
+
+			var details = data.DETAILS;
+			var prg_name = '';
+			var append_prg_city = '';
+			var append_prg_country = '';
+			var split_prg_city = '';
+			var split_prg_country = '';
+			var prg_term = '<center>';
+			var appendlocation = '';
+			var appendcommanb = ', ';
+			var appendParameter = '';
+			var arr_params = new Array(0);
+			var appendparametertext = '';
+			var appendparametervalue = '';
+			var splitparametertext = '';
+			var splitparametervalue = '';
+			var appendprogramlong = '';
+			var appendprogramlat = '';
+			var splitprogramlong = '';
+			var splitprogramlat = '';
+			var arr_locations = new Array(0);
+
+			if(details){
+				for (var key in details) {
+			
+					if(key == 'PROGRAM_NAME')
+					prg_name = details[key];
+
+					if(key == 'TERMS'){
+						var termObj = details[key];
+						for(var term in termObj){
+							if(term && typeof termObj[term]=='object'){
+								var termObj1 = termObj[term];
+								for(term1 in termObj1){
+								if(term1 == 'PROGRAM_TERM')
+									prg_term = prg_term + termObj1[term1];
+								else if(term1 && typeof termObj1[term1]=='object'){
+									var termObj2 = termObj1[term1];
+									for(var term2 in termObj2){
+										if(prg_term!='')
+											prg_term = prg_term + termObj2[term2] + '</BR>';
+										else
+											prg_term = termObj2[term2]			
+										}
+									}
+								}
+							}
+						}
+					}
+					
+					if(key == 'LOCATIONS'){
+						var locObj = details[key];
+						for(var loc in locObj){
+							if(loc && typeof locObj[loc]=='object'){
+								var locObj1 = locObj[loc];
+								var llcheck = '';
+								for(var loc1 in locObj1){
+									if(loc1 == 'PROGRAM_CITY')
+										if(append_prg_city==''){
+											append_prg_city = locObj1[loc1];
+										} else {
+											append_prg_city = append_prg_city + '||' + locObj1[loc1];
+										}
+									if(loc1 == 'PROGRAM_COUNTRY'){
+										if(append_prg_country==''){
+											append_prg_country = locObj1[loc1];
+										} else {
+											append_prg_country = append_prg_country + '||' + locObj1[loc1];
+										}
+									}
+									if(loc1 == 'PROGRAM_LATITUDE'){
+										if(locObj1[loc1]!=''){
+											if(appendprogramlat==''){
+												appendprogramlat = locObj1[loc1];
+											} else {
+												appendprogramlat = appendprogramlat + '||' + locObj1[loc1];
+											}
+											llcheck = '1';
+										}
+									}
+									if(loc1 == 'PROGRAM_LONGITUDE'){
+										if(locObj1[loc1]!=''){
+											if(appendprogramlong==''){
+												appendprogramlong = locObj1[loc1];
+											} else {
+												appendprogramlong = appendprogramlong + '||' + locObj1[loc1];
+											}
+											llcheck = '1';
+										}
+									}									
+									if(typeof locObj1[loc1]=='object'){
+										var locObj2 = locObj1[loc1];
+										llcheck = '';
+										for(var loc2 in locObj2){
+											if(loc2 == 'PROGRAM_CITY')
+												if(append_prg_city==''){
+													append_prg_city = locObj2[loc2];
+												} else {
+													append_prg_city = append_prg_city + '||' + locObj2[loc2];
+												}
+											if(loc2 == 'PROGRAM_COUNTRY'){
+												if(append_prg_country==''){
+													append_prg_country = locObj2[loc2];
+												} else {
+													append_prg_country = append_prg_country + '||' + locObj2[loc2];
+												}
+											}
+											if(loc2 == 'PROGRAM_LATITUDE'){
+												if(locObj2[loc2]!=''){
+													if(appendprogramlat==''){
+														appendprogramlat = locObj2[loc2];
+													} else {
+														appendprogramlat = appendprogramlat + '||' + locObj2[loc2];
+													}
+													llcheck = '1';
+												}
+											}
+											if(loc2 == 'PROGRAM_LONGITUDE'){
+												if(locObj2[loc2]!=''){
+													if(appendprogramlong==''){
+														appendprogramlong = locObj2[loc2];
+													} else {
+														appendprogramlong = appendprogramlong + '||' + locObj2[loc2];
+													}
+													llcheck = '1';
+												}
+											}																				
+										}
+										if(llcheck==''){
+											if(appendprogramlat==''){
+												appendprogramlat = '[none]';
+												appendprogramlong = '[none]';
+												llcheck = '1';
+											} else {
+												appendprogramlat = appendprogramlat + '||' + '[none]';
+												appendprogramlong = appendprogramlong + '||' + '[none]';
+												llcheck = '1';
+											}
+										}
+									}
+								}
+								if(llcheck==''){
+									if(appendprogramlat==''){
+										appendprogramlat = '[none]';
+										appendprogramlong = '[none]';
+										llcheck = '1';
+									} else {
+										appendprogramlat = appendprogramlat + '||' + '[none]';
+										appendprogramlong = appendprogramlat + '||' + '[none]';
+										llcheck = '1';
+									}
+								}
+							}
+						}
+						
+						if(append_prg_city!=''){
+							split_prg_city = append_prg_city.split('||');
+							split_prg_country = append_prg_country.split('||');
+							if(split_prg_city.length=="1"){
+								splitprogramlat = new Array(0);
+								splitprogramlat[0] = appendprogramlat;
+								splitprogramlong = new Array(0);
+								splitprogramlong[0] = appendprogramlong;
+							} else {
+							splitprogramlat = appendprogramlat.split('||');
+							splitprogramlong = appendprogramlong.split('||');
+							}
+							var k = 0;
+							for(i=0;i<split_prg_city.length;i++){
+								arr_locations[k]= new Array(0);
+								arr_locations[k][0] = split_prg_city[i];
+								arr_locations[k][1] = split_prg_country[i];
+								arr_locations[k][2] = splitprogramlong[i];
+								arr_locations[k][3] = splitprogramlat[i];
+								k = k + 1;
+							}
+						}						
+					}
+					
+					if(key == 'PARAMETERS'){
+						if(key && typeof details[key]=='object'){
+							var parametersObj = details[key];
+							for(var parameter in parametersObj){
+								var parametersObj1 = parametersObj[parameter];
+								for(var parameter1 in parametersObj1){
+									var parametersObj2 = parametersObj1[parameter1];
+									for(var parameter2 in parametersObj2){
+										if(parameter2 == 'PROGRAM_PARAM_TEXT'){
+											appendparametertext = appendparametertext + parametersObj2[parameter2]+'||';									
+										}
+										if(parameter2 == 'PARAM_VALUE'){									
+											appendparametervalue = appendparametervalue + parametersObj2[parameter2]+'~';
+										}
+									}
+								}
+							}
+						}
+				
+						if(appendparametertext!=''){
+							splitparametertext = appendparametertext.split('||');
+							splitparametervalue = appendparametervalue.split('~');
+						
+							var k = 0;
+							for(i=0;i<splitparametertext.length;i++){
+								arr_params[k]= new Array(0);
+								arrindex = isInArray(arr_params,splitparametertext[i]);
+							
+								if(arrindex == -1){
+									arr_params[k][0] = splitparametertext[i];
+									arr_params[k][1] =splitparametervalue[i];
+									k = k + 1;
+								}
+								else {
+									arr_params[arrindex][1] =arr_params[arrindex][1] + appendcommanb +splitparametervalue[i];
+								}
+							}
+						}
+					}	
+				}				
+        	}
+        	
+        	$('#programname').html(prg_name);
+        	$('#programterms').html(prg_term + '</center>');
+        	
+        	var parametertext = '';
+        	
+        	for (var paramind in arr_params) {
+        		if(arr_params[paramind][0]!='')
+        		parametertext = parametertext + '<P><B>' + arr_params[paramind][0] + ':</B> ' + arr_params[paramind][1] + '</P>';
+        	}
+        	
+        	$('#programparameters').html(parametertext);
+        	
+        	for (var locationind in arr_locations) {
+        		if(arr_locations[locationind][0]!='')
+        		appendlocation = appendlocation + arr_locations[locationind][0] + ', ' + arr_locations[locationind][1] + '</BR>';
+        	}
+        	
+        	$('#programlocations').html(appendlocation);
+        	
+      		var mapurl = '<center><img src="//maps.googleapis.com/maps/api/staticmap?zoom=2&maptype=terrain&size=275x200&sensor=false';
+        	
+        	for (var maplocation in arr_locations) {
+        		if(arr_locations[maplocation][2]!='[none]') {
+        			mapurl = mapurl + '&markers=%7C' + arr_locations[maplocation][3] + ',' + arr_locations[maplocation][2];
+        		}
+        	}
+        	
+        	mapurl = mapurl + '"></center>';
+        	if(mapurl=='<center><img src="//maps.googleapis.com/maps/api/staticmap?zoom=2&maptype=terrain&size=275x200&sensor=false"></center>') {
+        		mapurl='<center>Sorry, no location data for this program</center>';
+        	}
+        	$('#programmap').html(mapurl);
+        	$('#programbrochure').html(data.DETAILS.PROGRAM_BROCHURE);
+        	$('#emailbutton').attr('onclick', 'emailBrochure(' + data.DETAILS.PROGRAM_ID + ', "' + prg_name + '")');
+        	$.mobile.hidePageLoadingMsg();
+        	$.mobile.changePage( $("#page2"), { transition: "fade"} );
+		
+		}
+
+        // This function makes the ajax call to fetch the brochure content
+            
+        function loadBrochure(progid) {
+        	$.mobile.showPageLoadingMsg();
+	       	$.getJSON(sitedomain + 'api/index.cfm?callName=getProgramBrochure&ResponseEncoding=JSON&Program_ID=' + progid + '&callBackName=parseBrochure&jsoncallback=?');
+        }
+
+        // Helper function for checking to see if something is in an array
+
+		function isInArray(arr,val){
+			for(arrCount=0;arrCount<arr.length;arrCount++){
+				if(arr[arrCount][0]==val) return arrCount; 
+			}
+			return -1;
+		}
+
+        // This function extracts the list of countries from the data returned by the API and builds/reveals the drop-down menu
+
+		function _cb_addSearchCountries(data) {
+			var appendcountry = "<option value=''>Any</option>";
+			
+			if(data.RECORDCOUNT > 0){
+				var prg_elements = data.ELEMENT;				
+				if(prg_elements) {
+					for (var key in prg_elements){
+						if(key == 'OPTIONS'){
+							var objoptions = prg_elements[key];
+							for (var proper in objoptions) {
+								var country = objoptions[proper];
+								for (var countryproper in country) {
+									var countryopt = country[countryproper];
+									for(var t in countryopt) {
+										if(t == 'VALUE'){
+											if(countryopt[t]!=""){
+												if(appendcountry !='') {
+													appendcountry = appendcountry + "<option value='" +countryopt[t]+"'>"+countryopt[t]+"</option>";
+												}
+												else {
+													appendcountry = "<option value='" +countryopt[t]+"'>"+countryopt[t]+"</option>";
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		$('#selectmenu1').html(appendcountry);
+        $("option:contains('Any')").remove();
+        sortlist("selectmenu1");
+        $('#searchoptions').css("display", "block");
+			
+		}
+
+        // This is the API callback function that parses, builds, and reveals program search results
+
+		function _cb_parseSearchResults(data) {
+			var append_prg_name = '';
+			var append_prg_id = '';
+			var split_prg_name = '';
+			var split_prg_id = '';
+			var arr_prgs = new Array(0);
+			
+			if(data.RECORDCOUNT > 0){
+				var rs = data.PROGRAM; 
+				if(rs) {
+					for (var key in rs) {
+						if (key == 'PROGRAM_NAME'){
+							if(append_prg_name == '') {
+								append_prg_name = rs[key];
+							} else {
+								append_prg_name = append_prg_name + '||' + rs[key];
+							}
+						}
+						if (key == 'PROGRAM_ID'){
+							if(append_prg_id == '') {
+								append_prg_id = rs[key];
+							} else {
+								append_prg_id = append_prg_id + '||' + rs[key];
+							}
+						}
+						if (typeof rs[key]=='object'){
+							var obj = rs[key];
+							for (var prop in obj) {
+								if(prop == 'PROGRAM_NAME'){
+									if(append_prg_name == '') {
+										append_prg_name = obj[prop];
+									} else {
+										append_prg_name = append_prg_name + '||' + obj[prop];
+									}
+								}
+								if(prop == 'PROGRAM_ID'){
+									if(append_prg_id == '') {
+										append_prg_id = obj[prop];
+									} else {
+										append_prg_id = append_prg_id + '||' + obj[prop];
+									}
+								}
+							}
+						}
+					}
+					
+					if(append_prg_name!=''){
+					
+						split_prg_name = append_prg_name.split('||');
+						if(split_prg_name.length=="1"){
+							split_prg_id = new Array(0);
+							split_prg_id[0] = append_prg_id;
+						} else {
+							split_prg_id = append_prg_id.split('||');
+						}
+						var k = 0;
+						for(i=0;i<split_prg_name.length;i++){
+							arrindex = isInArray(arr_prgs,split_prg_name[i]);
+							if(arrindex == -1){
+								arr_prgs[k]= new Array(0);
+								arr_prgs[k][0] = split_prg_name[i];
+								arr_prgs[k][1] = split_prg_id[i];
+								k = k + 1;
+							}
+						}
+						
+						var resultoptions = '';
+						
+						arr_prgs.sort(sortresults);
+						
+						for(var results in arr_prgs){
+							if(arr_prgs[results][0]!='') {
+								resultoptions = resultoptions + "<li data-icon=\"false\"><a data-ajax=\"false\" href=\"javascript:void(0);\" onclick=\"loadBrochure('" + arr_prgs[results][1] + "');\">" + arr_prgs[results][0] + "</a></li>";
+							}
+						}
+						
+						$('#searchresults').html(resultoptions);
+						
+					}
+				}
+			}
+					
+		    $('#searchresults').listview('refresh');
+            $.mobile.hidePageLoadingMsg();
+            $('#searchresults').css("display", "block");
+		}
+
+        // Helper function that alphabetizes the drop-down menu
+		
+		function sortlist(id) { 
+        	var lb = document.getElementById(id); 
+            arrTexts = new Array();
+        	for(i=0; i<lb.length; i++) { 
+            	arrTexts[i] = lb.options[i].text+':'+lb.options[i].value; 
+            } 
+            arrTexts.sort(); 
+        	for(i=0; i<lb.length; i++) { 
+            	el = arrTexts[i].split(':'); 
+                lb.options[i].text = el[0]; 
+                lb.options[i].value = el[1]; 
+            } 
+        }
+
+        // Helper function that alphabetizes the search results
+        
+        function sortresults(a, b) {
+			var x = String(a[0]).toUpperCase(); 
+			var y = String(b[0]).toUpperCase();
+			if (x > y)
+				return 1
+			if (x < y)
+				return -1
+			return 0;
+        }
+
+        // This function switches the sections of the program brochure page
+        
+        function showProgramSection(section) {
+        	$(".programtab").css("display","none");
+        	$("#" + section + "container").css("display","block");
+        	$(".nav-tab").removeClass("active-tab");
+        	$("#" + section + "button").addClass("active-tab");
+        }
+        
+        function emailBrochure(programid, programname) {
+   			var link = "mailto:?"
+            + "&subject=" + escape("Study abroad program")
+            + "&body=" + escape(programname + ":") + "%0A%0A" + escape(sitedomain + "index.cfm?FuseAction=Programs.ViewProgram&Program_ID=" + programid)
+    		;
+
+		    window.location.href = link;
+        }
+    </script>
+    
+    </body>
+</html>
