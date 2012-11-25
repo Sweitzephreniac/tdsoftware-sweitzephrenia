@@ -206,7 +206,7 @@
         
         */
 
-		$.getJSON(sitedomain + "api/index.cfm/?callname=getProgramSearchElements&country=yes&responseEncoding=json&callBackName=addSearchCountries&jsoncallback=?");
+		$.getJSON(sitedomain + "api/index.cfm?callname=getProgramSearchElements&country=yes&responseEncoding=json&callBackName=addSearchCountries&jsoncallback=?");
 		
 		// We set up the drop-down menu so that it will fetch search results when changed
 			
@@ -235,7 +235,7 @@
             
             */
         	
-        	$.getJSON(sitedomain + "api/index.cfm/?callname=getProgramSearchResults&responseEncoding=json&Country=" + selected_value + "&callBackName=parseSearchResults&jsoncallback=?");
+        	$.getJSON(sitedomain + "api/index.cfm?callname=getProgramSearchResults&responseEncoding=json&Country=" + selected_value + "&callBackName=parseSearchResults&jsoncallback=?");
         	
         });
             
