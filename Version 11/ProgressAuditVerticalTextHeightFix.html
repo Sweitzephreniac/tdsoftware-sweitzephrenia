@@ -1,0 +1,25 @@
+<script language="JavaScript" type="text/javascript">
+// insert this into text interface field#8552 to fix the progress audit web page
+// insert this into text interface fields#11985,11986,11987,11988 to fix the HTML printed version
+$(document).ready(function() {
+	// override the vertical text class and set width to 100%
+	$(".vertText").css('width','100%');
+	// then iterate through all of them to get the current 'width' value and keep the largest
+	biggestWidth = 0;
+	currentWidth = 0;
+	$(".vertText").each(function(index) {
+		currentWidth = $(this).width();
+		if (currentWidth>biggestWidth) {
+			biggestWidth = currentWidth;
+		}
+	});
+	// reinstate the width of 18 pixels
+	$(".vertText").css('width','18px');
+	// account for Firefox's different way of rendering
+	if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+    biggestWidth = biggestWidth + 10;
+	}
+	// change the height of the table cell of all the vertical text cells to the highest width
+	$(".vertText").parent().css('height', biggestWidth);
+});
+</script>
