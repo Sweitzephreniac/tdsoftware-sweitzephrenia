@@ -1,0 +1,97 @@
+<!-- Add this to text interface field#8552 -->
+<form name="bp" id="bp" method="post" action="index.cfm"><input type="hidden" name="ApplicationIDsList" /><input type="hidden" name="applicationIDs" /><input type="hidden" name="Report" /><input type="hidden" name="Search_ID" /><input type="hidden" name="ReturnTo" /><input type="hidden" name="csrftoken" /></form>
+<script>
+$(document).ready(function(){
+	var bcsrf=$('form[name="printForm"] input[name="csrftoken"]').val();
+	var bsearchid=$('form[name="printForm"] input[name="Search_ID"]').val();
+	$('#bp input[name="csrftoken"]').val(bcsrf);
+	$('#bp input[name="Search_ID"]').val(bsearchid);
+	var $options=$('<select style="display: none;" id="oAction" name="optAction" onchange="batchprocess(this.options[this.selectedIndex].value); this.selectedIndex=0;"><option value="">- Process Marked -</option><option value="txt">Text export</option><option value="exc">Excel export</option><option value="rpt">Create report</option><option value="sta">Batch status change</option><option value="rev">Batch review status</option><option value="ifo">Batch info edit</option><option value="tag">Batch app tags</option><option value="rec">Recs Pending</option><option value="mat">Batch Material Edit</option><option value="doc">Batch Attach File</option><option value="exp">Full Export</option></select>');
+	$('#PrintTableSwitch2').parent().append($options);
+	$('input[type="checkbox"]').change(function() {
+		var au=$(this).parent().next().children().attr('href');
+		var aa=au.split('=');
+		var ai=aa[2];
+		if (this.checked) {
+			adapp(ai);
+		} else {
+			rvapp(ai);
+		}
+	});
+	$('a:contains("Uncheck All")').click(function() {
+		rvapp("A");
+	}).prev().click(function() {
+		var al=$('form[name="printForm"] input[name="ApplicationIDsList"]').val();
+		$('#bp input[name="ApplicationIDsList"]').val(al);
+		$('#bp input[name="applicationIDs"]').val(al);
+		$('select[name="optAction"]').attr('style','');		
+	});
+});
+function batchprocess(opt) {
+	var bu="";
+	switch(opt) {
+	case "txt":
+	bu="StudentAdmin.ExportReport";
+	$('#bp input[name="Report"]').val('1');
+	break;
+	case "exc":
+	bu="StudentAdmin.ExportReport";
+	$('#bp input[name="Report"]').val('2');
+	break;
+	case "rpt":
+	bu="Administration.ReportWizard";
+	$('#bp input[name="ReturnTo"]').val('StudentAdmin.SearchWizard_3');
+	break;
+	case "sta":
+	bu="StudentAdmin.BatchStatusSelect";
+	break;
+	case "rev":
+	bu="StudentAdmin.BatchReviewSelect";
+	break;
+	case "ifo":
+	bu="StudentAdmin.BatchInfoEditSelect";
+	break;
+	case "tag":
+	bu="StudentAdmin.BatchAppTags";
+	break;
+	case "rec":
+	bu="StudentAdmin.RecommendationsPending";
+	break;
+	case "mat":
+	bu="StudentAdmin.BatchAppMats";
+	break;
+	case "doc":
+	bu="StudentAdmin.BatchApplicationDocs";
+	break;
+	case "exp":
+	bu="Maintenance.ImportExport";
+	break;
+	}
+	$('#bp').attr('action','index.cfm?FuseAction='+bu);
+	document.forms["bp"].submit();
+}
+function adapp(appid) {
+	var list=$('#bp input[name="ApplicationIDsList"]').val();
+	if (list=="") {
+		$('#bp input[name="ApplicationIDsList"]').val(appid);
+		$('#bp input[name="applicationIDs"]').val(appid);
+		$('select[name="optAction"]').attr('style','');
+	} else {
+		$('#bp input[name="ApplicationIDsList"]').val(list+","+appid);
+		$('#bp input[name="applicationIDs"]').val(list+","+appid);
+	}
+}
+function rvapp(appid) {
+	var l=$('#bp input[name="ApplicationIDsList"]').val();
+	if (l==appid||appid=="A") {
+		$('#bp input[name="ApplicationIDsList"]').val('');
+		$('#bp input[name="applicationIDs"]').val('');
+		$('select[name="optAction"]').attr('style','display: none;');
+	} else {
+		var nl=l.replace(","+appid,"");
+		var fl=nl.replace(appid+",","");
+		$('#bp input[name="ApplicationIDsList"]').val(fl);
+		$('#bp input[name="applicationIDs"]').val(fl);
+	}
+}
+</script>
