@@ -1,0 +1,13 @@
+<script language="JavaScript" type="text/javascript">
+// append this script to text interface field# 12258
+$(document).ready(function(){
+	var n = $('#inc_frm input[name="export_type"]').val();
+	if (n=="p") {
+		var $switch=$('<input id="pex" type="radio" checked="checked" value="p" name="export_type" onclick="asnval(\'p\');"><label for="pex">Program Data</label>    <input id="pdex" type="radio" value="d" name="export_type" onclick="asnval(\'d\');"><label for="pdex">Program Dates</label>');
+		$('#inc_frm').append($switch);
+	}
+});
+function asnval(pv) {
+	$('#inc_frm input[name="export_type"]').val(pv);
+}
+</script>

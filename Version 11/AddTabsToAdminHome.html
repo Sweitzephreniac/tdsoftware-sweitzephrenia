@@ -1,0 +1,13 @@
+<script language="JavaScript" type="text/javascript">
+// append to text interface field#6511
+$(document).ready(function(){
+	var n = $('.level1text a[href="index.cfm?FuseAction=StudentAdmin.Search"]').length;
+	if (n==1) {
+		$('#header-tabs-container ul').append('<li><span class="tab-corner-left"></span><a class="tablinks header-tabs-container" title="Application Search" href="index.cfm?FuseAction=StudentAdmin.Search">Application Search</a><span class="tab-corner-right"></span></li>');
+	}
+	var n = $('.level1text a[href="index.cfm?FuseAction=ProgramAdmin.AdvancedSearch"]').length;
+	if (n==1) {
+		$('#header-tabs-container ul').append('<li><span class="tab-corner-left"></span><a class="tablinks header-tabs-container" title="Application Search" href="index.cfm?FuseAction=ProgramAdmin.AdvancedSearch">Program Search</a><span class="tab-corner-right"></span></li>');
+	}
+});
+</script>

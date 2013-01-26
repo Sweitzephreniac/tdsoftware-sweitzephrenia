@@ -1,0 +1,96 @@
+<script language="JavaScript" type="text/javascript">
+// this script should be appended to text interface field#6511 (admin home tips text)
+
+// id number of the saved report
+var db_reportid = #ID_NUMBER_FOR_REPORT_GOES_HERE#
+
+// string with today's date
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth()+1;
+var yyyy = today.getFullYear();
+if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
+
+// for the purposes of this test, the saved report will have two fields in the output, the application ID# and the status of the application, and no groupings
+
+$(document).ready(function(){
+	if (supports_html5_storage) {
+		var n = $('a[href*="Report_ID=' + db_reportid + '"]').length;
+		if (n>0) {
+			var db_date = localStorage.getItem("DashboardDate");
+			if (db_date) {
+				if (db_date!=today) {
+					get_data();
+				} else {
+					build_dashboard();
+				}
+			} else {
+				get_data();
+			}
+		}
+	}
+});
+
+function build_dashboard() {
+	var $widget=$('<div class="wdgt-container" id="db"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>Dashboard</h2></div></div></div></div><div class="wdgt-content" id="db_content"></div><div class="wdgt-footer" align="center"><input type="button" class="Button100" value="Refresh" onclick="db_refresh();"><div class="wdgt-footer-left"><div class="wdgt-footer-right"><div class="wdgt-footer-center">&nbsp;</div></div></div></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div></div></div>');
+	$('#notes').parent().prepend($widget);
+	var dbstatuses = new Array();
+	var dbdata = new Array();
+	for (var key in localStorage) {
+		if (key!="DashboardDate") {
+			var dbvalue = localStorage.getItem(key);
+			var dbpos = dbstatuses.indexOf(dbvalue);
+			if (dbpos==-1) {
+				dbstatuses.push(dbvalue);
+				dbdata.push(1);
+			} else {
+				var dbcount = dbdata[dbpos];
+				dbdata[dbpos] = dbcount + 1;
+			}
+		}
+	}
+	var dbcontent = "<center>";
+	for (var key in dbstatuses) {
+		dbcontent = dbcontent + "</br>" + dbstatuses[key] + ": " + dbdata[key]
+	}
+	dbcontent = dbcontent + "</br></br></center>";
+	$('#db_content').append(dbcontent);
+}
+
+function get_data() {
+	$('#rightColumnInside').append('<div id="db_results" style="display: none;"></div>');
+	$('#db_results').load('index.cfm?FuseAction=Administration.ReportWizard_2&Report_ID=' + db_reportid + ' table[cellpadding="4"]', function() {
+		// parse through those results and dump them into localStorage
+		localStorage.clear();
+		localStorage.setItem("DashboardDate", today);
+		$('#db_results tr').each(function(index) {
+			if (index!=0) {
+				var trappid = '';
+				$(this).children('td').each(function(index2) {
+					var content = $(this).text();
+					if (index2==1) {
+						trappid = content;
+					} else if (index2==2) {
+						localStorage.setItem(trappid, content);
+					}
+				});
+			}
+		});
+	build_dashboard();
+	});
+}
+
+function db_refresh() {
+	$('#db').remove();
+	$('#db_results').remove();
+	get_data();
+}
+
+function supports_html5_storage() {
+	try {
+		return 'localStorage' in window && window['localStorage'] !== null;
+	} catch (e) {
+		return false;
+	}
+}
+</script>
