@@ -2,6 +2,7 @@
 // this script should be appended to text interface field#6511 (admin home tips text)
 
 // id number of the saved report
+// the saved report should have no groupings and have two fields in the output, the application ID# and the status of the application
 var db_reportid = #ID_NUMBER_FOR_REPORT_GOES_HERE#
 
 // string with today's date
@@ -10,8 +11,6 @@ var dd = today.getDate();
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
 if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
-
-// for the purposes of this test, the saved report will have two fields in the output, the application ID# and the status of the application, and no groupings
 
 $(document).ready(function(){
 	if (supports_html5_storage) {
@@ -60,7 +59,6 @@ function build_dashboard() {
 function get_data() {
 	$('#rightColumnInside').append('<div id="db_results" style="display: none;"></div>');
 	$('#db_results').load('index.cfm?FuseAction=Administration.ReportWizard_2&Report_ID=' + db_reportid + ' table[cellpadding="4"]', function() {
-		// parse through those results and dump them into localStorage
 		localStorage.clear();
 		localStorage.setItem("DashboardDate", today);
 		$('#db_results tr').each(function(index) {
