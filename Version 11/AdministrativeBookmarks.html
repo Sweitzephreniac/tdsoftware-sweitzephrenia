@@ -1,0 +1,54 @@
+<script language="JavaScript" type="text/javascript">
+// append this script and style tag to text interface field #1161
+// append this tag to text interface field #5066: <input type="hidden" id="bookmarkable" value="YesA">
+// append this tag to text interface field #13701: <input type="hidden" id="bookmarkable" value="YesU">
+// append this tag to text interface field #8544: <input type="hidden" id="bookmarkable" value="YesP">
+$(document).ready(function(){
+  // after the page load, we check to see if localstorage is available
+	if (supports_html5_storage) {
+		// now we set variables to see if the bookmark feature is being used
+		var bmjsurl = "#DOC CENTER OBJECT URL OF THE BOOKMARK SCRIPT#";
+		var loaded = "No";
+		var admin_name = "BM|" + $.trim($("b.authBar").text());
+		var bm_list = localStorage.getItem(admin_name.replace(/\s/g, ''));
+		var bmcheck = $("#bookmarkable").val();
+		// let's see if we need to do anything with bookmarks on the page
+		if (typeof bmcheck == "undefined") { bmcheck = "No"; }
+		if (bm_list || bmcheck.indexOf("Yes") != -1) {
+			// first, we'll create the containers for the buttons and widget
+			var bm_container = '<div id="bm-container"><div id="bm-widget"></div><div id="bm-button"></div></div>';
+			$("#leftColumn").append(bm_container);
+			// next, load the bookmark script and build what needs to be built
+			$.getScript(bmjsurl, function() {
+				// first, we check to see if this user has bookmarks in localstorage
+				if (bm_list) {
+					//  yes, build the widget
+					build_bookmarks(admin_name);
+				}
+				// then, we check to see if the page is bookmarkable
+				if (bmcheck != "No") {
+					// yes, build the button
+					bookmarking_button(bmcheck, admin_name);
+				}
+			});
+		}
+	}
+});
+
+function supports_html5_storage() {
+	try {
+		return 'localStorage' in window && window['localStorage'] !== null;
+	} catch (e) {
+		return false;
+	}
+}
+</script>
+<style type="text/css">
+  p.bookmark {font-size: 115%;}
+  #bookmarks-content {padding: 0px 5px;}
+  a.bm_delete {color: red;}
+	#bm-button {font-size: 115%; padding-top: 5px;}
+	#bm-container {background-color: white; padding-bottom: 5px;}
+	span.bm_type {text-decoration: underline;}
+	span.bm_delete {float: right;}
+</style>
