@@ -1,0 +1,9 @@
+<script language="JavaScript" type="text/javascript">
+	// append this to text interface field# 56 (or the tips field for the proper phase of deployment)
+	$(document).ready(function(){
+		var sigdoc = "#INSERT NAME OF THE SIGNATURE DOCUMENT#";
+		var imgname = $('a[title*="'+sigdoc+'"]').parent().next().children('div').attr("title");
+		if (imgname == "Not Received")
+			GB_showCenter('#TITLE OF THE GRAYBOX#', '#URL OF DOCUMENT CENTER OBJECT#');
+		});
+</script>

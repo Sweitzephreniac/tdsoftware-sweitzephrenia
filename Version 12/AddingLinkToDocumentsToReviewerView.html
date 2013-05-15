@@ -1,0 +1,8 @@
+<script language="JavaScript" type="text/javascript">
+	// append text interface field# 4734 with this content
+	$(document).ready(function(){
+		var appid = $('input[name="Application_ID"]').val();
+		$('#tab-wizard-container').next().append('<div class="data-header"><div class="data-header-left"><div class="data-header-right"><div class="data-header-center">Attached Documents:</div></div></div></div><div class="content-row"><div class="content-column fn bdr padding left-bdr">​<a id="documentlink" target="_blank" >View documents that have been attached to this application</a></div></div><div class="clearfloat"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div></div></br>');
+		$('#documentlink').attr('href', 'index.cfm?FuseAction=StudentAdmin.Application&Application_ID=' + appid + '&Tab=Documents');
+	});
+</script>

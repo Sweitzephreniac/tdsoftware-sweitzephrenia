@@ -1,0 +1,29 @@
+<script language="JavaScript" type="text/javascript">
+	// add this script to text interface field#1409 (program search results tips text)
+	$(document).ready(function(){
+		// first, we add a hidden container to the top of existing results
+		// it has the header row ready
+		$(".data-container").prepend('<div class="data-table"><table style="display: none;" class="bot-bdr" width="100%" cellspacing="0" cellpadding="4" border="0" summary="" id="featuredProgs"><tr><th class="title-bg-color white-font" width="46%" nowrap="nowrap">Featured Programs</th><th class="title-bg-color white-font" width="18%" nowrap="nowrap">City</th><th class="title-bg-color white-font" width="18%" nowrap="nowrap">Country</th><th class="title-bg-color white-font" width="18%" nowrap="nowrap">Region</th><th class="title-bg-color white-font" width="1%">Save/Share</th></tr></table></div>');
+		// next, we need to know how many rows are featured
+		var n = $('tr div.ico_star').length;
+		// if there are rows found, we loop through them and clone them into the hidden container
+		if (n>0) {
+			$('tr div.ico_star').each(function( index ) {
+				$(this).parent().parent().parent().clone().appendTo('#featuredProgs');
+			});
+		// then we loop through them again and set the proper shading
+			var color = "bg-gray-color";
+			$('#featuredProgs tr').each(function( index ) {
+				$(this).children().removeClass('bg-gray-color bg-white-color');
+				$(this).children().addClass(color);
+				if (color=="bg-white-color") {
+					color = "bg-gray-color";
+				} else {
+					color = "bg-white-color";
+				}
+			});
+		// then we make that container visible
+			$('#featuredProgs').attr('style', 'display: block;');
+		}
+	});
+</script>
