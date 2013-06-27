@@ -1,0 +1,70 @@
+<script language="JavaScript" type="text/javascript">
+  // add script to interface field# 5918
+	$(document).ready(function(){
+		// set var for the application id#
+		var appid = #APP ID#;
+		// build interface and hidden containers
+		$('#paging').before('<div id="loc-srch" style="display: none;margin-bottom: 10px;"><input id="searchfield" maxlength="100" size="20" type="text" name="city"><input id="searchbutton" type="button" class="Button" value="Search"></div><div id="location-container" style="display: none;"></div><div id="results-container" class="data-container" style="display: none;margin-bottom: 10px;"><div class="data-header"><div class="data-header-left"><div class="data-header-right"><div class="data-header-center"><h2>Search results:</h2></div></div></div></div><div class="data-table" id="results-table"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div></div></div>');
+		$('#paging br').remove();
+		// load in the select options
+		$('#location-container').load('index.cfm?FuseAction=StudentAdmin.Application&Application_ID=' + appid + '&Tab=Risk #selAvailable', function() {
+			set_triggers();
+		});
+	});
+
+	function set_triggers() {
+		$('#loc-srch').css('display', 'block');
+		$('#searchbutton').click( function() {
+			var srchstng = $('#searchfield').val();
+			if (srchstng!='') {
+				$('#loc-srch p').remove();
+				search_locations(srchstng);
+			}
+		});
+		$('#searchfield').keyup(function(event){
+    		if(event.keyCode == 13){
+        		$("#searchbutton").click();
+    		}
+		});
+	}
+
+	function search_locations(srchstng) {
+		// empty current result content
+		$('#results-table').empty();
+		$('#results-container').css('display', 'none');
+		// set vars
+		var resultsTableData = new Array();
+		// search existing options and build array of values
+		srchstng = srchstng.toUpperCase();
+		$('#selAvailable option').each(function (index) {
+			var locName = $(this).text().trim();
+			var locVal = $(this).val();
+			var locNm = locName.toUpperCase();
+			if (locNm.indexOf(srchstng) != -1) {
+				resultsTableData.push(locName + '|' + locVal);
+			}
+		});
+		// create table if necessary
+		if (resultsTableData.length > 0) {
+			$('#results-table').append('<div class="data-table"><table cellpadding="6" cellspacing="0" width="100%" border="0" class="bot-bdr"><tbody id="loc-srch-table"><tr><th width="99%" class="title-bg-color white-font">Location</th><th nowrap="nowrap" align="center" class="title-bg-color white-font">Actions</th></tr>');
+			// iterate through array records
+			var bc = 'white';
+			var i=0;
+			for (i in resultsTableData) {
+				var locationData = resultsTableData[i].split('|')
+				if (bc == 'white') {
+					$('#loc-srch-table').append('<tr><td class="left-bdr bg-white-color "> ' + locationData[0] + '</td><td nowrap="nowrap" align="center" class="bg-white-color pad-left-12"><a href="index.cfm?FuseAction=SystemSettings.LocationEdit&Location_ID=' + locationData[1] + '" title="Edit Location"><div class="sprites_icons ico_pencil absmiddle float-lft" title="Edit Location"></div></a></td></tr>');
+					bc = 'gray';
+				} else {
+					$('#loc-srch-table').append('<tr><td class="left-bdr bg-gray-color "> ' + locationData[0] + '</td><td nowrap="nowrap" align="center" class="bg-gray-color pad-left-12"><a href="index.cfm?FuseAction=SystemSettings.LocationEdit&Location_ID=' + locationData[1] + '" title="Edit Location"><div class="sprites_icons ico_pencil absmiddle float-lft" title="Edit Location"></div></a></td></tr>');
+					bc = 'white';
+				}
+			}
+			$('#results').append('</tbody></table></div>');
+			// display search results
+			$('#results-container').css('display', 'block');
+		} else {
+			$('#loc-srch').append('<p>No results.</p>');
+		}
+	}
+</script>
