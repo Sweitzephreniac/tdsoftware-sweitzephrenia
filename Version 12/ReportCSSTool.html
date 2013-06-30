@@ -1,0 +1,10 @@
+<!-- append script to interface field# 6675 -->
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function(){
+		if (document.location.href.indexOf(('FuseAction=Administration.ReportWizard_2') != -1 || 'FuseAction=Administration.ReportProfileWizard_2' != -1) && document.location.href.indexOf('DocType=html') != -1) {
+			$.getScript(#URL_OF_THE_SCRIPT#, function() {
+        		initialize_editor();
+    		});
+		}
+	});
+</script>
