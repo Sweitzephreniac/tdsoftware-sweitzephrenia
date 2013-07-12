@@ -1,0 +1,67 @@
+<script language="JavaScript" type="text/javascript">
+	// append this script to interface field# 5319
+	$(document).ready(function(){
+		// globals
+		prgcycOptions = new Array();
+		oldprgcycSelect = $("#selPrgName option:selected").val();
+		// loop through options to build array
+		$("#selPrgName option").each(function() {
+			var optionVal = $(this).val();
+			var optionArray = optionVal.split('|');
+			var optionText = $(this).text();
+			optionText = optionText.substring(0, optionText.lastIndexOf(optionArray[1]));
+			optionText = $.trim(optionText);
+			optionArray.push(optionText);
+			prgcycOptions.push(optionArray);
+		});
+		// adjust interface
+		$("#selPrgName").next('br').remove();
+		$("#selPrgName").removeAttr('onchange').css('display','none').parent().prev().children('label').text('Change Program / App Cycle:');
+		// build new menu with just program names
+		var progNames = "";
+		for (var i = 0; i < prgcycOptions.length; i++) {
+			if(progNames.indexOf(prgcycOptions[i][3]) == -1) {
+				progNames = progNames + '<option value="' + prgcycOptions[i][0] + '">' + prgcycOptions[i][3] + '</option>';
+			}
+		}
+		$("#selPrgName").parent().prepend('<select id="selNewPrgName"><option selected="selected" value="0">- Select Program -</option>' + progNames);
+		// set trigger when program name drop-down changed
+		$("#selNewPrgName").change(function() {
+			var prgsel = $("#selNewPrgName option:selected").text();
+			program_select(prgsel);
+		});
+		// set trigger when app cycle drop-down changed
+		$("#selPrgName").change(function() {
+			var prgsel = $("#selNewPrgName option:selected").text();
+			var cycsel = $("#selPrgName option:selected").text();
+			app_cycle_select(prgsel,cycsel);
+		});
+	});
+	
+	function program_select(selection) {
+		// check to see if default chosen
+		if (selection == "- Select Program -") {
+			$("#selPrgName").css('display','none');
+			$("input[name='btnSubmit']").removeAttr('disabled');
+			$("input[name='New_Program_Name']").val($("input[name='Old_Program_Name']").val());
+			return true;
+		}
+		// get app cycle options
+		var cycNames = "";
+		for (var i = 0; i < prgcycOptions.length; i++) {
+			if(prgcycOptions[i][3] == selection) {
+				cycNames = cycNames + '<option value="' + prgcycOptions[i][0] + '|' + prgcycOptions[i][1] + '|' + prgcycOptions[i][2] + '">' + prgcycOptions[i][1] + ', ' + prgcycOptions[i][2] + '</option>';
+			}
+		}
+		// create and reveal second drop-down menu
+		$("#selPrgName option").remove();
+		$("#selPrgName").append('<option selected="selected" value="' + oldprgcycSelect + '">- Select app cycle -</option>' + cycNames + '</select>');
+		$("#selPrgName").css('display','block');
+		$("input[name='btnSubmit']").attr('disabled','disabled');
+	}
+	
+	function app_cycle_select(prog_select,appcycle_select) {
+		$("input[name='New_Program_Name']").val(prog_select + ' ' + appcycle_select);
+		$("input[name='btnSubmit']").removeAttr('disabled');
+	}
+</script>
