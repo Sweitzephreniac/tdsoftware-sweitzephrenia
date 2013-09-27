@@ -1,0 +1,12 @@
+<!-- Add to interface field#4400 -->
+<p>
+	<input type="button" value="Import Template" onclick="importTemplate();">
+</p>
+<script language="JavaScript" type="text/javascript">
+	function importTemplate() {
+		var docurl = 'index.cfm?FuseAction=PublicDocuments.View&File_ID=#FILE_ID_OF_TEMPLATE# #templatecontent';
+		$('iframe[title*="Rich text editor"]').each(function() {
+			$('body', this.contentWindow.document||this.contentDocument).load(docurl);
+		});
+	}
+</script>
