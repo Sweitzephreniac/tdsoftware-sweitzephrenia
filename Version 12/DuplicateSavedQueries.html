@@ -1,0 +1,25 @@
+<!-- script for creating the duplicate icons:
+This should be added to the admin home page tips text (Field# 6511) -->
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function(){
+		// check for any saved queries on the page
+		// if yes, then iterate through them
+		$('div[title="Edit Query"]').parent().each(function() {
+			// get the URL of the saved query edit pencil
+			var dupeurl = this.href + "&Dupe=1";
+			// create a new icon of that URL but with the extra parameter
+			$(this).after('<a title="Duplicate Query" href="' + dupeurl + '"><div class="sprites_icons ico_duplicate absmiddle" title="Duplicate Query"></div></a>');
+		});
+	});
+</script>
+<!-- script for dealing with a locator and profile dupe query request:
+This needs to be added to add the query form pages for profile and application searches (Field#s 12492, 8566, 8567, 13817) -->
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function(){
+		// check to see if there is a URL parameter for duplication
+		if (location.href.match(/&Dupe\=/i)) {
+			// if yes, then null the ID to make this a new query
+			$('input[name="iqueryid"]').val('');
+		}
+	});
+</script>
