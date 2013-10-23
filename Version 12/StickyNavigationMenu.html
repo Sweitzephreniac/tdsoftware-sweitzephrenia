@@ -1,0 +1,31 @@
+<script language="JavaScript" type="text/javascript">
+	/* append to text interface field#1158 */
+	$(document).ready(function(){
+		$(document).scroll(function () {
+			var scrollTop = 118; /* This var is the height of the header */
+			if (($(window).scrollTop() >= scrollTop) && ($('#leftColumn').height() < $('#rightColumn').height())) {
+				$('#leftColumn').addClass('stickynav');
+			} else {
+				$('#leftColumn').removeClass('stickynav');
+			}
+		});
+	});
+</script>
+<style>
+	.stickynav {
+		position: fixed;
+		top: 0;
+	}
+	.stickynav .level0text {
+		padding: 2px 20px 2px 20px;
+	}
+	.stickynav .level1text {
+		padding: 2px 20px 2px 35px;
+	}
+	.stickynav .level0item.expandable .level0text, .stickynav .level0item.expandable.submenuopen .level0text.expandabletexthovered {
+		background-position: 5px 3px;
+	}
+	.level0text, .level1text {
+		transition: padding .25s ease-in;
+	}
+</style>
