@@ -1,0 +1,11 @@
+<script language="JavaScript" type="text/javascript">
+	// append this script to text interface field# 39 (Applicant home tips text)
+	$(document).ready(function(){
+		var widgetTopHtml='<div class="wdgt-container"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>Sweitzephreniac</h2></div></div></div></div><div class="wdgt-content" style="padding: 5px;"><style type="text/css">#twitter-widget-0{width:100%;}</style>';
+		var widgetTwitterHtml='<a class="twitter-timeline" href="https://twitter.com/sweitzephreniac" data-widget-id="382860365068914689" data-chrome="noheader nofooter noborders transparent" data-tweet-limit="4">Tweets by @sweitzephreniac</a>';
+		var widgetBottomHtml='</div><div class="wdgt-footer"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"> </div></div></div>';
+		var widgetHtml = widgetTopHtml + widgetTwitterHtml + widgetBottomHtml;
+		$('div .wdgt-container:first').after(widgetHtml);
+		!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+	});
+</script>
