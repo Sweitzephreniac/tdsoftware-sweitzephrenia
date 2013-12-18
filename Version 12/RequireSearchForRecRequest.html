@@ -1,0 +1,14 @@
+<script language="JavaScript" type="text/javascript">
+	// append this script to text interface# 56 (Pre-decision tips text)
+	$(document).ready(function(){
+		$('a[title="Request Electronic Recommendation"]').attr('href',$('a[title="Request Electronic Recommendation"]').attr('href') + '&First=1');
+	});
+</script>
+<script language="JavaScript" type="text/javascript">
+	// append this script to text interface# 173 (Recommendation request tips text)
+	$(document).ready(function(){
+		if (document.URL.indexOf("First=1")>0) {
+			$('.H5b:contains("Option 2")').parent().parent().parent().parent().remove();
+		}
+	});
+</script>
