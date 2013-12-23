@@ -1,0 +1,40 @@
+<script language="JavaScript" type="text/javascript">
+	// append this script to text interface field# 5682
+	$(document).ready(function(){
+		// check to see if user has Excel export option
+		if ($("select[name='optAction']").children("option[value='exc']").length>0) {
+			// add the button to reveal the checkboxes
+			$('#orderby').parent().prepend('<div><input id="excexport" class="Button100" type="button" value="Export"></div>').click(function() {
+				exportExc();
+			});
+		}
+	});
+	function exportExc() {
+		if ($('#excexport').val() == "Export Marked") {
+			var idlist = new Array();
+			// get the application ids for all the marked checkboxes
+			$('.exc-cb').each(function (index) {
+				if ($(this).is(':checked')) {
+					idlist.push($(this).val());
+				}
+			});
+			// adjust the hidden field for the Excel export form to have these ids
+			idlist.toString();
+			$('form[name="exc"]').children('input[name="ApplicationIDsList"]').val(idlist);
+			// submit the form
+			document.forms.exc.submit();
+		} else {
+			// select all the application links in the results
+			$('a[href*="StudentAdmin.Application&Application_ID="]').each(function (index) {
+				var paramarray = $(this).attr('href').split('&');
+				var appid = paramarray[1].substring('15');
+				// for each one, add a checkbox to the left of the link
+				$(this).before('<input class="exc-cb" type="checkbox" value="' + appid + '"> - ');
+			});
+			// change the button to an 'export' button
+			$('#excexport').attr('value','Export Marked');
+			// remove the Excel export from the options menu
+			$("select[name='optAction']").children("option[value='exc']").remove();
+		}
+	}
+</script>
