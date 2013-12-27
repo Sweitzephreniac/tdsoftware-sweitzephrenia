@@ -1,0 +1,265 @@
+<!-- Containers that will be used for the search interfaces -->
+
+<div id="progsearch-interface-container">
+	<div class="wdgt-container">
+		<div class="wdgt-header">
+			<div class="wdgt-header-left">
+				<div class="wdgt-header-right">
+					<div class="wdgt-header-center">
+						<h2>Program Criteria</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wdgt-content">
+			<div id="term-options">
+				<h3>Terms:</h3>
+			</div>
+			<div id="region-options">
+				<h3>Regions:</h3>
+			</div>
+		</div>
+		<div class="wdgt-footer"></div>
+		<div class="bottom-layer">
+			<div class="bottom-layer-left">
+				<div class="bottom-layer-right">
+					<div class="bottom-layer-center"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="progsearch-results-container">
+	<div class="wdgt-container">
+		<div class="wdgt-header">
+			<div class="wdgt-header-left">
+				<div class="wdgt-header-right">
+					<div class="wdgt-header-center">
+						<h2>Programs Available</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wdgt-content"></div>
+		<div class="wdgt-footer"></div>
+		<div class="bottom-layer">
+			<div class="bottom-layer-left">
+				<div class="bottom-layer-right">
+					<div class="bottom-layer-center"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Style definitions for the containers -->
+
+<style type="text/css">
+	#progsearch-interface-container {
+		display: none;
+	}
+	#progsearch-results-container {
+		display: none;
+	}
+	#term-options {
+		padding: 5px;
+	}
+	#region-options {
+		padding: 5px;
+	}
+</style>
+
+<!-- Script that sets up the interface and performs the searches -->
+
+<script language="JavaScript" type="text/javascript">
+
+	// INITIALIZATION
+
+	// When the page finishes loading, it will make an API call to fetch the terms and the regions that will be used in the program search. When the response for that API call is received, it is going to run the interface builder function (_cb_buildInterface) and pass it the data received from the API call
+
+	var sitedomain = "#YOUR SITE'S DOMAIN#";
+	$(document).ready(function(){
+		$.getJSON(sitedomain + 'api/index.cfm?callName=getProgramSearchElements&terms=yes&region=yes&ResponseEncoding=json&callBackName=buildInterface&jsoncallback=?');
+	});
+
+	// INTERFACE BUILDER
+
+	// This function is the callback for the initial API call that fetches the terms and regions. It is going to create the checkboxes for the terms and regions that it received back from the API and set up the event handler that will run the program searches as the user clicks them.
+
+	function _cb_buildInterface(data) {
+
+		// parse through the results of the data received by iterating through the ELEMENT node of the JSON packet returned
+
+		for (var item in data.ELEMENT) {
+			if (data.ELEMENT[item].DISPLAY_NAME == "Term") {
+
+				// This is the term element of the JSON packet so it is going to iterate through all the terms sent back and add them as checkboxes to the interface container
+
+				for (var termoption in data.ELEMENT[item].OPTIONS.OPTION) {
+
+					// Extract the name of the term from the JSON packet
+
+					var termname = data.ELEMENT[item].OPTIONS.OPTION[termoption].NAME;
+
+					// If it isn't the 'Any' option, add the checkbox 'input' tag to the term options container and give it a value of the name of the term, but replace any spaces in the term name with plus signs so that a URL using that value will be valid. Also, add the name of the term as text just after the checkbox.
+
+					if (termname != "Any") {$("#progsearch-interface-container #term-options").append('<input type="checkbox" name="term" value="' + termname.replace(/ /g,"+") + '">' + termname + '<br>');}
+				}
+			}
+			if (data.ELEMENT[item].DISPLAY_NAME == "Region") {
+
+				// This is the region element of the JSON packet so it is going to iterate through all the regions sent back and add them as checkboxes to the interface container
+
+				for (var regionoption in data.ELEMENT[item].OPTIONS.OPTION) {
+
+					// Extract the name of the region from the JSON packet
+
+					var regionname = data.ELEMENT[item].OPTIONS.OPTION[regionoption].NAME;
+
+					// If it isn't the 'Any' option, add the checkbox 'input' tag to the region options container and give it a value of the name of the region, but replace any spaces in the region name with plus signs so that a URL using that value will be valid. Also, add the name of the region as text just after the checkbox.
+
+					if (regionname != "Any") {$("#progsearch-interface-container #region-options").append('<input type="checkbox" name="region" value="' + regionname.replace(/ /g,"+") + '">' + regionname + '<br>');}
+				}
+			}
+		}
+
+		// The interface is now build so we can reveal the criteria options by adjusting the style attribute of the container
+
+		$("#progsearch-interface-container").css("display","block");
+
+		// We set an event handler on all the checkboxes (input tags) in the interface so that when they change, the results builder function (updateResults) gets called.
+
+		$("#progsearch-interface-container input").change(function() {
+			updateResults();
+		});
+	}
+
+	// RESULTS BUILDER
+
+	// There are two functions in the results builder. The first is 'updateResults', and it gets called whenever the user checks or un-checks one of the checkboxes in the interface. The second function is a callback function (_cb_parseResults) that receives the results of the program search API call kicked off, when necessary, by the first function.
+
+	function updateResults(){
+
+		// This function is going to iterate through all the checked boxes and build up the URL needed to make the API call (but only if there were boxes that were checked). It starts by setting the base URL needed for the API call.
+
+		var searchhtml = sitedomain + 'api/index.cfm?callName=getProgramSearchResults';
+
+		// Set a variable for storing the checked term names and iterate through the term options that are selected
+
+		var termoptions = '&term=';
+		$("#term-options input").each(function (index) {
+			if ($(this).is(':checked')) {
+
+				// if this isn't the first term found, add the delimiter to the variable's string
+
+				if (termoptions != "&term=") {termoptions = termoptions + '%7F%2C';}
+
+				// add the term name to the variable
+
+				termoptions = termoptions + $(this).val();
+			}
+		});
+
+		// If the variable for storing the checked term names has term names added to it, add the string to the URL for the API call
+
+		if (termoptions != "&term=") {searchhtml = searchhtml + termoptions;}
+
+		// Set a variable for storing the checked regions and iterate through the region options that are selected
+
+		var regionoptions = '&region=';
+		$("#region-options input").each(function (index) {
+			if ($(this).is(':checked')) {
+
+				// if this isn't the first region found, add the delimiter to the variable's string
+
+				if (regionoptions != "&region=") {regionoptions = regionoptions + '%7F%2C';}
+
+				// add the region name to the variable
+
+				regionoptions = regionoptions + $(this).val();
+			}
+		});
+
+		// If the variable for storing the checked regions has regions added to it, add the string to the URL for the API call
+
+		if (regionoptions != "&region=") {searchhtml = searchhtml + regionoptions;}
+
+		// If the variable for storing the URL of the API call has not changed, nothing is selected. Hide the search results container and exit the function
+
+		if (searchhtml == sitedomain + 'api/index.cfm?callName=getProgramSearchResults') {
+			$("#progsearch-results-container").css("display","none");
+			return;
+		}
+
+		// Since there is search criteria selected, add the JSON encoding paramater and callback names to the URL of the API call and fire off the AJAX request
+
+		$.getJSON(searchhtml + "&ResponseEncoding=json&callBackName=parseResults&jsoncallback=?");
+
+		// Nothing left to do here - when the AJAX response comes back, the callback function (_cb_parseResults) will be called with the program search results.
+
+	}
+
+	function _cb_parseResults(data) {
+
+		// This function receives the JSON packet with the programs in the search results and builds the HTML to display them in the interface container (progsearch-results-container).
+
+		// Completely empty out the current contents of the results container and hide it by adjusting the display style property.
+
+		$('#progsearch-results-container').css('display','none');
+		$('#progsearch-results-container .wdgt-content').html('');
+
+		// Set a variable for holding the interface's HTML content with the initial div and table tag, and create an array for holding all the program ID#s that have been added to the interface so that we can check for duplicates.
+
+		var resultsHTML = '<div class="data-table"><table width="100%" cellspacing="0" cellpadding="4" border="0" class="bot-bdr" summary="">';
+		var programInResults = new Array();
+
+		// If there is only one program in the search results, we need to parse it slightly differently. Check the JSON packet to see if this is the case.
+
+		if (data.ROWCOUNT == 1) {
+
+			// There is only one program in the results, so we just add the tags to the HTML with the anchor link to the program's brochure page
+
+			resultsHTML = resultsHTML + '<tr><td class="bg-white-color"><a title="' + data.PROGRAM.PROGRAM_NAME + '" href="index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + data.PROGRAM.PROGRAM_ID + '">' + data.PROGRAM.PROGRAM_NAME + '</a></td></tr>';
+			programInResults.push(data.PROGRAM.PROGRAM_ID);
+		} else {
+
+			// Since we found more than one program in results, we will iterate through each of the programs returned by the search
+
+			for (var item in data.PROGRAM) {
+
+				// Before we add this program, we check to see if the program is not in the array yet because if a program has multiple locations, it will appear in the JSON packet one time for each location assigned to it.
+
+				if (programInResults.indexOf(data.PROGRAM[item].PROGRAM_ID) == -1) {
+
+					// Since it isn't in the array yet, we add the necessary table and anchor tags for the program record to the HTML variable
+
+					resultsHTML = resultsHTML + '<tr><td class="bg-white-color"><a title="' + data.PROGRAM[item].PROGRAM_NAME + '" href="index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + data.PROGRAM[item].PROGRAM_ID + '">' + data.PROGRAM[item].PROGRAM_NAME + '</a></td></tr>';
+
+					// We add the program's ID to the array so that it won't be added again if the program has multiple locations
+
+					programInResults.push(data.PROGRAM[item].PROGRAM_ID);
+				}
+			}
+		}
+
+		// Before we add the HTML, we check to make sure there were results.
+
+		if (programInResults.length > 0) {
+
+			//  Since there are programs in the array, we add the closing tags to the HTML variable and put that HTML in the container.
+
+			resultsHTML = resultsHTML + '</tbody></table></div>';
+			$('#progsearch-results-container .wdgt-content').html(resultsHTML);
+
+			// To change every other row in the results to gray, iterate through each row and if there is no remainder when dividing the number of the row by 2 (meaning that it is an odd number), change the background class from white to gray.
+
+			$('#progsearch-results-container .wdgt-content td').each(function( index ) {
+				if (index%2 != 0) {$(this).removeClass('bg-white-color').addClass('bg-gray-color');}
+			});
+
+			// Reveal the search results by adjusting the style of the container.
+
+			$('#progsearch-results-container').css('display','block');
+		}
+	}
+</script>
