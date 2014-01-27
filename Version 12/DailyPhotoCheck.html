@@ -1,0 +1,24 @@
+<script language="JavaScript" type="text/javascript">
+	// append this script to text interface field# 39 (Applicant home tips text)
+	$(document).ready(function(){
+		var today = new Date();
+		var dd = today.getDate();
+		var mm = today.getMonth()+1;
+		var yyyy = today.getFullYear();
+		if(dd<10){dd='0'+dd} if(mm<10){mm='0'+mm} today = mm+'/'+dd+'/'+yyyy;
+		if ($('img[src*="no_image.jpeg"]').length > 0 && getCookie('photocheck') != today) {
+			document.cookie = "photocheck=" + today;
+			alert("You haven't uploaded a profile photo. Please upload an image of yourself so our staff can put a face to your name.");
+			window.location='index.cfm?FuseAction=Students.ProfileEdit';
+		}
+	});
+	function getCookie(cname) {
+		var name = cname + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0; i<ca.length; i++) {
+			var c = ca[i].trim();
+			if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+		}
+		return "";
+	}
+</script>
