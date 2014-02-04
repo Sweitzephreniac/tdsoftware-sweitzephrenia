@@ -1,0 +1,41 @@
+<input type="hidden" id="program-list" value="{PIPE DELIMITED LIST OF PROGRAM NAMES}">
+<input type="hidden" id="process-list" value="{PIPE DELIMITED LIST OF PROCESS ELEMENTS}">
+<style type="text/css">
+	.featured-program {
+		font-weight:bold;
+	}	
+	.priority-process {
+		font-weight:bold;
+	}
+	.myGlower {
+		-webkit-transition: background-color .5s linear, box-shadow 0.5s linear;
+		-moz-transition: background-color .5s linear, box-shadow 0.5s linear;
+		transition: background-color .5s linear, box-shadow 0.5s linear;
+	}
+	.myGlower.active {
+		-webkit-box-shadow: 0 0 10px 5px tomato;
+		-moz-box-shadow: 0 0 10px 5px tomato;
+		box-shadow: 0 0 10px 5px tomato;
+		background-color: tomato;
+	}
+</style>
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function(){
+		var featuredPrograms = $("#program-list").val().split("|");
+		var processElements = $("#process-list").val().split("|");
+		for (var i = 0; i < featuredPrograms.length; i++) {
+			$('a:contains("' + featuredPrograms[i] + '")').addClass('featured-program myGlower');
+		}
+		for (var i = 0; i < processElements.length; i++) {
+			if ($('a:contains("' + processElements[i] + '")').parent().next().children().attr('title') != 'Received') {
+				$('a:contains("' + processElements[i] + '")').addClass('priority-process myGlower');
+			}
+		}
+		if ($('.myGlower').length > 0) {
+			var glower = $('.myGlower');
+			window.setInterval(function() {
+				glower.toggleClass('active');
+			}, 1000);
+		}
+	});
+</script>
