@@ -1,0 +1,925 @@
+<!--
+
+This is an alternate brochure template for Terra Dotta Software Version 12.1 that is completely driven through the TDS public interface API and javascript.
+
+There are three aspects to configuring programs to be fully functional with this template:
+
+1 - A URL parameter called Prog_ID that determines the program data to be fetched.
+2 - Somewhere in the program notes, the text |BannerImage|##| in which the ## is the Image_ID# of the banner image to be used
+3 - Brochure content that is broken into three divs with id attributes of general, academic, and exchange
+
+-->
+
+<style type="text/css">
+	#sa_content {
+		padding-top: 0px;
+	}
+	
+	#brochure-banner {
+		padding-top: 10px;
+		position: relative;
+		min-height: 20px;
+	}
+	
+	#program-name {
+		position: absolute;
+		top: 15px;
+		left: 5px;
+		font-family: Arial, Verdana, Helvetica, sans-serif;
+		font-size: 1.5em;
+	}
+	
+	#sponsor-name {
+		position: absolute;
+		bottom: 2px;
+		left: 5px;
+		font-family: Arial, Verdana, Helvetica, sans-serif;
+		font-size: .5em;
+	}
+	
+	#information-panel {
+		display: inline-block;
+		vertical-align: top;
+		width: 64%;
+		padding-top: 15px;
+	}
+	
+	#information-panel-navigation, #brochure-tabs-navigation {
+		text-align: center;
+	}
+	
+	#information-panel-navigation ul, #brochure-tabs-navigation ul{
+		list-style: none;
+		padding: 0px;
+		margin: 3px 0px 10px 0px;
+	}
+		
+	.section-tab {
+		border-style: solid;
+		border-width: 1px 2px 2px 2px;
+		display: inline;
+		padding: 3px 10px;
+		margin: 5px;
+		border-radius: 0px 0px 10px 10px;
+		font-family: Arial;
+		font-weight: bold;
+		background-color: #1372a8;
+		color: white;
+		border-color: black;
+	}
+	
+	.selected-section-tab {
+		box-shadow: 0px 1px 10px -1px #000000;
+		background-color: #000000;
+	}
+
+	#information-panel-content ul{
+		list-style: none;
+		margin-left: 0;
+	    margin-bottom: 0;
+    	margin-top: 0;
+		padding: 15px;
+	}
+	
+	#parameter-list {
+		display: none;
+	}
+	
+	#parameter-list .param-name {
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	
+	#parameter-list .param-value{
+		display: block;
+		padding-bottom: 10px;
+		padding-top: 5px;
+		padding-left: 15px;
+	}
+	
+	#location-list {
+		display: none;
+		text-align: center;
+	}
+	
+	#location-list li{
+		padding-bottom: 5px;
+	}
+	
+	#term-list {
+		display: none;
+		text-align: center;
+	}
+
+	#term-list li{
+		padding-bottom: 5px;
+	}
+	
+	#action-panel {
+		display: inline-block;
+		vertical-align: top;
+		width: 35%;
+		padding-top: 15px;
+	}
+	
+	#brochure-tabs-content {
+		padding: 0px 10px 0px 10px;
+	}
+	
+	#brochure-tabs-content > div {
+		display: none;
+	}
+	
+	#selectedterm {
+		margin-bottom: 15px;
+		margin-top: -10px;
+	}
+	
+	#budgetsheet {
+		padding-bottom: 15px;
+	}
+	
+	#foreigncourses {
+		margin-top: -35px;
+	}
+	
+	#dates .date-record-termyear {
+		display: block;
+		margin-bottom: 0px;
+	}
+	
+	#dates .date-record-dates {
+		padding-left: 25px;
+		display: block;
+	}
+
+	/* Button styles generated using CSSButtonGenerator.com */
+
+	.actionbutton {
+		margin: 10px;
+		-moz-box-shadow:inset 0px 1px 10px -1px #bee2f9;
+		-webkit-box-shadow:inset 0px 1px 10px -1px #bee2f9;
+		box-shadow:inset 0px 1px 10px -1px #bee2f9;
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #63b8ee), color-stop(1, #468ccf) );
+		background:-moz-linear-gradient( center top, #63b8ee 5%, #468ccf 100% );
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#63b8ee', endColorstr='#468ccf');
+		background-color:#63b8ee;
+		-webkit-border-top-left-radius:15px;
+		-moz-border-radius-topleft:15px;
+		border-top-left-radius:15px;
+		-webkit-border-top-right-radius:15px;
+		-moz-border-radius-topright:15px;
+		border-top-right-radius:15px;
+		-webkit-border-bottom-right-radius:15px;
+		-moz-border-radius-bottomright:15px;
+		border-bottom-right-radius:15px;
+		-webkit-border-bottom-left-radius:15px;
+		-moz-border-radius-bottomleft:15px;
+		border-bottom-left-radius:15px;
+		text-indent:0;
+		border:3px solid #3866a3;
+		display:inline-block;
+		color:#14396a;
+		font-family:Arial;
+		font-size:1.2em;
+		font-weight:bold;
+		font-style:normal;
+		line-height:50px;
+		text-decoration:none;
+		text-align:center;
+		text-shadow:1px 0px 0px #7cacde;
+	}
+
+	.actionbutton:hover {
+		background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #468ccf), color-stop(1, #63b8ee) );
+		background:-moz-linear-gradient( center top, #468ccf 5%, #63b8ee 100% );
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#468ccf', endColorstr='#63b8ee');
+		background-color:#468ccf;
+	}
+
+	.actionbutton:active {
+		position:relative;
+		top: 5px;
+	}
+</style>
+
+<!-- Brochure container-->
+
+<div id="brochure-content">
+
+	<!-- Page breadcrumb -->
+
+	<div id="BreadCrumbs">
+		<a href="index.cfm?FuseAction=Programs.Home">Programs</a> &gt; Brochure
+	</div>
+
+	<!-- Accessibility tags -->
+	
+	<a name="sa_content_start"></a>
+	<noscript><p class="SA_error"><span class="sprites_icons ico_icon_error mar-15 align-top">&nbsp;</span><span class="inline_display">Your browser does not support JavaScript, or it is currently disabled. This site requires JavaScript support to run properly.</span></p></noscript>
+
+	<!-- Page title, tips text, and program node navigation tabs -->
+
+	<div id="header-container">
+		<div class="header-title">
+			<div class="header-left">
+				<div class="header-right">
+					<div class="header-center">
+						<div class="center-blue">
+							Programs : Brochure
+						</div>
+						<div class="center-black">
+						<a class="no-underline" id="tip-msg-link" href="javascript:void(0);" title="Hide Tips" onclick="$.toggleCookie('TIPS'); $('#header-tips-container').slideToggle(); $('#TipChk').toggleClass('checked unchecked');if($('#TipChk').hasClass('checked')){$('#tipShowText').text('Show Tips');$('#TipChk').attr({alt : 'Show Tips',title : 'Show Tips'});$('#tip-msg-link').attr('title','Show Tips');} else if($('#TipChk').hasClass('unchecked')){$('#tipShowText').text('Hide Tips');$('#TipChk').attr({alt : 'Hide Tips',title : 'Hide Tips'});$('#tip-msg-link').attr('title','Hide Tips');}"><img src="/release/12-1/_images/spacer.gif" class="unchecked" alt="Hide Tips" id="TipChk" title="Hide Tips" border="0" height="16" width="16" /> <span class="Small" id="tipShowText">Hide Tips</span></a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="header-tips-container" style="display:block;">
+			<div class="help-image">
+			</div>
+			<span>This page is a completely customized program brochure page implemented through JavaScript and API calls. By changing the Prog_ID# parameter in the page's URL, you can make it display any public program brochure page on this site using this design.</span>
+		</div>
+		<div class="bottom-layer">
+			<div class="bottom-layer-left">
+				<div class="bottom-layer-right">
+					<div class="bottom-layer-center">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="header-tabs-container">
+			<ul>
+				<li>
+					<span class="tab-corner-left">&nbsp;</span><a class="tablinks header-tabs-container" href="index.cfm?FuseAction=Programs.Home" title="Find a program">Find a program</a><span class="tab-corner-right">&nbsp;</span>
+				</li> 
+            </ul>
+        </div>
+	</div>
+
+	<!-- Program's banner image, name, and sponsor -->
+
+	<div id="brochure-banner">
+	</div>
+
+	<!-- Tabbed interface with parameters (what), locations (where), and terms (when) -->
+
+	<div id="information-panel">
+	</div>
+	
+	<!-- Apply, request info, and request advising buttons -->
+	
+	<div id="action-panel">
+	</div>
+
+	<!-- Tabbed interface with general, academic, exchange, links to budget sheets/courses, and program dates-->
+
+	<div id="brochure-tabs">
+	</div>
+</div>
+
+<script language="JavaScript" type="text/javascript">
+
+	// Initialization function
+
+	$(document).ready(function(){
+	
+		// get the program ID from the URL of the page
+
+		var urlparts = document.URL.split('&');
+		var sitedomain = urlparts[0].substring(5,urlparts[0].indexOf('index.cfm'));
+		for (var i=1; i < urlparts.length; i++) {
+			if (urlparts[i].substring(0,7) == 'Prog_ID') {
+				var progid = urlparts[i].substring(8);
+			}
+		}
+
+		// call the api to fetch the brochure content using the program ID that was found in the URL
+
+		$.getJSON(sitedomain + 'api/index.cfm?callName=getProgramBrochure&Program_ID=' + progid + '&ResponseEncoding=json&callBackName=processBrochure&jsoncallback=?');
+	});
+	
+	// This is the callback function that is executed when the API call to fetch the brochure data is finished
+	
+	function _cb_processBrochure(data) {
+	
+		/* These two lines can be uncommented if you want to have the data of the API call logged in the browser's console for inspection.
+	
+		consoledata = data;
+		console.log(consoledata);
+		
+		*/
+		
+		// build the action panel with the apply/advising buttons
+		
+		actionPanel(data);
+		
+		// fetch the banner image and put the program/sponsor names at the top of the page
+		
+		bannerBuilder(data);
+		
+		// build the information panel with the parameter, term, and location data
+		
+		informationPanel(data);
+		
+		// build the brochure content tabs using the brochure content, course, budget, and date information
+		
+		brochureTabs(data);
+	}
+	
+	// this is function that builds the action panel with buttons for applying to the program or requesting advising
+	
+	function actionPanel(data) {
+	
+		// create the html that will be the empty panel that we insert into the page, if necessary
+		
+		var panelbasehtml = '<div class="wdgt-container"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>Get started</h2></div></div></div></div><center><div class="wdgt-content"></div></center><div class="wdgt-footer"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div>';
+		
+		// set the empty variable for the content that we will insert into that panel
+		
+		var panelhtml = '';
+				
+		// check for apply now button
+		
+		if (data.DETAILS.APPLY_NOW.ENABLED == "YES") {
+		
+			// add the html for the apply now button to the content to be added to the panel
+		
+			panelhtml = panelhtml + '<div><input type="button" value="Apply Now" class="actionbutton" onclick="ApplyNow(\'' + data.DETAILS.APPLY_NOW.LINK.HREF + '\');"></div>';
+		} else {
+		
+			// add the message about the program not currently accepting applications to the panel
+		
+			panelhtml = panelhtml + '<div>This program is not currently accepting applications.</div>';
+		}
+
+		// check for advising button
+		
+		if (data.DETAILS.REQUEST_ADVISING.ENABLED == 1) {
+		
+			// add the html for the request advising button to the content to be added to the panel
+		
+			panelhtml = panelhtml + '<div><input type="button" value="Request Advising" class="actionbutton" onclick="RequestAdv();"></div>';
+		}
+				
+		// add the panel to the page's container for the action buttons if there are buttons to add
+		
+		if (panelhtml != '') {
+		
+			// create the empty panel on the page
+		
+			$('#action-panel').html(panelbasehtml);
+			
+			// insert the html into that empty panel
+			
+			$('#action-panel .wdgt-content').html(panelhtml);
+		}
+	}
+	
+	// function that confirms the user wants to request advising - it is called when the 'Request Advising' button is clicked
+	
+	function RequestAdv() {
+		var ok = confirm("You are about to request advising. Are you sure you wish to do this?");
+		if (ok) {
+			window.location = 'index.cfm?FuseAction=Applicants.EnterAdvising';
+		} else {
+			return false;
+		}
+	}
+	
+	// function that confirms the user wants to apply to the program - it is called when the 'Apply Now' button is clicked
+	
+	function ApplyNow(desturl) {
+		var ok = confirm("You are about to create an application. Are you sure you wish to do this?");
+		if (ok) {
+			window.location = desturl;
+		} else {
+			return false;
+		}
+	}
+
+	// function that builds the banner by checking for the image ID# and putting the program/sponsor names into the banner container
+	
+	function bannerBuilder(data) {
+	
+		// get the image ID# for the banner by creating an array of the program notes and checking for it
+		
+		var programnotes = data.DETAILS.PROGRAM_NOTES.split('|');
+		var bannerid = "";
+		for (var i=0; i < programnotes.length; i++) {
+			if (programnotes[i] == 'BannerImage') {
+				bannerid = programnotes[i+1];
+			}
+		}
+		
+		// if there was an image found insert the image tag into the page's banner container
+		
+		if (bannerid != "") {
+			$("#brochure-banner").html('<img src="_customtags/ct_Image.cfm?Image_ID=' + bannerid + '" alt="Brochure Banner" />');
+		}
+		
+		// get the name of the program and put it into the banner container - the css of the page will take care of the positioning
+		
+		var progname = data.DETAILS.PROGRAM_NAME;		
+		$("#brochure-banner").append('<div id="program-name">' + progname + '</div>');
+		
+		// get the sponsor of the program and put it into the banner container - the css of the page will take care of the positioning
+		
+		var sponsorname = data.DETAILS.SPONSOR_NAME;
+		if (sponsorname != "") {
+			$("#brochure-banner").append('<div id="sponsor-name">Program Sponsor:' + sponsorname + '</div>');
+		}
+	}
+	
+	// function that builds the information panel with parameter, location, and term information
+	
+	function informationPanel(data) {
+	
+		// create the html that will be the empty panel that we insert into the page, if necessary
+	
+		var panelbasehtml = '<div class="wdgt-container"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>Program information</h2></div></div></div></div><div class="wdgt-content"></div><div class="wdgt-footer"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div>';
+		
+		// create the container for storing the html of a parameter name and its values
+		
+		var parameterhtml = "";
+		
+		// check for parameter information if there is content in the parameters node of the API data
+		
+		if (data.DETAILS.PARAMETERS != "") {
+		
+			// create two arrays, one to hold the program's values for the parameters and one for the parameter names
+		
+			var paramvalues = new Array();
+			var paramids = new Array();
+			
+			// parse through the parameter data
+			
+			if (data.DETAILS.PARAMETERS.PARAMETER.PARAM_ID) {
+			
+				// When there is a 'PARAM_ID' in the node 'data.DETAILS.PARAMETERS.PARAMETER.PARAM_ID' instead of an array of values, it means that there is just one parameter value for the program and we can just stuff that right into the arrays and be done parsing.
+			
+				paramids.push(data.DETAILS.PARAMETERS.PARAMETER.PARAM_ID + '|' + data.DETAILS.PARAMETERS.PARAMETER.PROGRAM_PARAM_TEXT);
+				paramvalues.push(data.DETAILS.PARAMETERS.PARAMETER.PARAM_ID + '|' + data.DETAILS.PARAMETERS.PARAMETER.PARAM_VALUE);
+			} else {
+			
+				// Since there are multiple parameter values for the program, we enumerate over the objects in the 'data.DETAILS.PARAMETERS.PARAMETER' node to extract the values.
+			
+				for (var key in data.DETAILS.PARAMETERS.PARAMETER) {
+				
+					// Create variable with the parameter's ID# and name separated by a pipe
+				
+					var paraminfo = data.DETAILS.PARAMETERS.PARAMETER[key].PARAM_ID + '|' + data.DETAILS.PARAMETERS.PARAMETER[key].PROGRAM_PARAM_TEXT;
+					
+					// Only add this to the array of parameter names if it isn't in there yet	
+				
+					if (paramids.indexOf(paraminfo) == -1) {
+						paramids.push(paraminfo);
+					}
+			
+					// Add the parameter's ID# and the program's value to the array of the program's values separated by a pipe.		
+					
+					paramvalues.push(data.DETAILS.PARAMETERS.PARAMETER[key].PARAM_ID + '|' + data.DETAILS.PARAMETERS.PARAMETER[key].PARAM_VALUE);
+				}
+			}
+			
+			// create the html of the parameters and parameter values as an unordered list - the css will handle all the rest of the formatting
+			
+			parameterhtml = '<ul id="parameter-list">';
+			
+			// Two loops - the first is going through each of the program parameter names we stored and starting the list item for that parameter
+			
+			for (var i=0; i < paramids.length; i++) {
+				var paramdata = paramids[i].split('|');
+				var paramid = paramdata[0];
+				var paramname = paramdata[1];
+				parameterhtml = parameterhtml + '<li><span class="param-name">' + paramname + ':</span><span class="param-value">';
+				
+				// We need a flag to know if the parameter value is the first one for the parameter
+				
+				var first = 'YES';
+				
+				// Nested loop, for each parameter, iterate through all the parameter values we stored and check to see if the parameter ID# matches. If it does, add it to the html.
+				
+				for (var j=0; j < paramvalues.length; j++) {
+					var paramvalue = paramvalues[j].split('|');
+					if (paramvalue[0] == paramid) {
+						if (first != 'YES') {
+							parameterhtml = parameterhtml + ', ';
+						} else {
+							first = 'NO';
+						}
+						parameterhtml = parameterhtml + paramvalue[1];
+					}
+				}
+				
+				// Close up the line item for this parameter.
+				
+				parameterhtml = parameterhtml + '</span></li>';
+			}
+			
+			// Close up the unordered list of parameter values.
+			
+			parameterhtml = parameterhtml + '</ul>';
+		}
+		
+		// Check for location information by seeing if there is content in that node of the data returned
+		
+		var locationhtml = '';
+		if (data.DETAILS.LOCATIONS != "") {
+		
+			// Create a container for holding all the location information we want
+		
+			var locationdata = new Array();
+			
+			// Parse through the location node
+			
+			if (data.DETAILS.LOCATIONS.LOCATION.PROGRAM_CITY) {
+			
+				// When there is a 'PROGRAM_CITY' in the node 'data.DETAILS.LOCATIONS.LOCATION' instead of an array of values, it means that there is just one location for the program and we can just stuff that right into the array and be done parsing.
+			
+				locationdata.push(data.DETAILS.LOCATIONS.LOCATION.PROGRAM_CITY + '|' + data.DETAILS.LOCATIONS.LOCATION.PROGRAM_COUNTRY + '|' + data.DETAILS.LOCATIONS.LOCATION.PROGRAM_REGION + '|' + data.DETAILS.LOCATIONS.LOCATION.PROGRAM_LATITUDE + '|' + data.DETAILS.LOCATIONS.LOCATION.PROGRAM_LONGITUDE);
+			} else {
+			
+				// Since there are multiple locations for the program, we enumerate over the objects in the 'data.DETAILS.LOCATIONS.LOCATION' node to extract the values.
+			
+				for (var key in data.DETAILS.LOCATIONS.LOCATION) {
+					locationdata.push(data.DETAILS.LOCATIONS.LOCATION[key].PROGRAM_CITY + '|' + data.DETAILS.LOCATIONS.LOCATION[key].PROGRAM_COUNTRY + '|' + data.DETAILS.LOCATIONS.LOCATION[key].PROGRAM_REGION + '|' + data.DETAILS.LOCATIONS.LOCATION[key].PROGRAM_LATITUDE + '|' + data.DETAILS.LOCATIONS.LOCATION[key].PROGRAM_LONGITUDE);
+				}
+			}
+			
+			// Create the html for the locations as an unordered list - the css will handle all the formatting
+			
+			locationhtml = '<ul id="location-list">';
+			for (var i=0; i < locationdata.length; i++) {
+				var locationdetails = locationdata[i].split('|');
+				locationhtml = locationhtml + '<li>' + locationdetails[0] + ', ' + locationdetails[1] + ' (' + locationdetails[2] + ')</li>';
+			}
+			locationhtml = locationhtml + '</ul>';
+		}
+		
+		// Check for terms by seeing if there is content in that node of the data returned
+		
+		var termhtml = '';
+		if (data.DETAILS.TERMS != "") {
+		
+			// Create a container for holding all the term information
+		
+			var termdata = new Array();
+			
+			// Parse through the term node
+			
+			if (data.DETAILS.TERMS.TERM.PROGRAM_TERM) {
+			
+				// When there is 'PROGRAM_TERM' in the node 'data.DETAILS.TERMS.TERM' instead of an array of values, it means that there is just one term for the program and we can just stuff that right into the array and be done parsing.
+			
+				termdata.push(data.DETAILS.TERMS.TERM.PROGRAM_TERM);
+			} else {
+			
+				// Since there are multiple terms for the program, we enumerate over the objects in the 'data.DETAILS.TERMS.TERM' node to extract the values.
+			
+				for (var key in data.DETAILS.TERMS.TERM) {
+					termdata.push(data.DETAILS.TERMS.TERM[key].PROGRAM_TERM);
+				}
+			}
+			
+			// Create the html for the terms as an unordered list - the css will handle all the formatting
+			
+			termhtml = '<ul id="term-list">';
+			for (var i=0; i < termdata.length; i++) {
+				termhtml = termhtml + '<li>' + termdata[i] + '</li>';
+			}
+			termhtml = termhtml + '</ul>';
+		}
+		
+		// We add the empty panel HTML to the page.
+		
+		$('#information-panel').html(panelbasehtml);
+		
+		// We build the navigation as an unordered list. Each potential sections's html starts as an empty string, so if there is content in it, it means that the tab needs to be added to the navigation. The css will handle all the formatting.
+		
+		var contenthtml = "<ul>";
+		if (parameterhtml != "") {
+			contenthtml = contenthtml + '<li class="section-tab">What</li>';
+		}
+		if (locationhtml != "") {
+			contenthtml = contenthtml + '<li class="section-tab">Where</li>';
+		}
+		if (termhtml != "") {
+			contenthtml = contenthtml + '<li class="section-tab">When</li>';
+		}
+		
+		// If the content of the navigation has changed, add it to the empty panel we created as a div.
+		
+		if (contenthtml != "<ul>") {
+			$('#information-panel .wdgt-content').append('<div id="information-panel-navigation">' + contenthtml + '</ul></div>');
+		}
+		
+		// Assign the 'selected-section-tab' CSS class to the first line item so that it will be displayed
+		
+		$('#information-panel-navigation li').first().addClass('selected-section-tab');
+		
+		// Create a container with all the contents of each of the three potential tabs
+		
+		var contenthtml = "";
+		if (parameterhtml != "") {
+			contenthtml = contenthtml + parameterhtml;
+		}
+		if (locationhtml != "") {
+			contenthtml = contenthtml + locationhtml;
+		}
+		if (termhtml != "") {
+			contenthtml = contenthtml + termhtml;
+		}
+		
+		// If there is content to display, add it to the container and reveal the first section
+		
+		if (contenthtml != "") {
+			$('#information-panel .wdgt-content').append('<div id="information-panel-content">' + contenthtml + '</div>');
+		}
+		$('#information-panel-content ul').first().css('display','block');
+		
+		// Add a click event handler to each of the panel buttons that will send the function 'showInfoPanel' the name of the tab clicked.
+		
+		$('#information-panel-navigation li').click(function () {
+			showInfoPanel( $(this).text() );
+		});
+	}
+	
+	// The function that handles the information panel switches. It receives the name of the tab clicked. It hides all the content first and then only reveals the section for the name that was clicked. It also sets that tab as the 'selected-section-tab'.
+	
+	function showInfoPanel(whichone) {
+		$('#information-panel-content ul').css('display','none');
+		$('#information-panel-navigation li').removeClass('selected-section-tab');
+		$('#information-panel-navigation li:contains(' + whichone + ')').addClass('selected-section-tab');
+		switch (whichone) {
+			case "What":
+				$('#parameter-list').css('display','block');
+				break;
+			case "Where":
+				$('#location-list').css('display','block');
+				break;
+			case "When":
+				$('#term-list').css('display','block');
+				break;
+		}
+	}
+	
+	// The function that builds the brochure tabs with the data returned by the API call.
+	
+	function brochureTabs(data) {
+	
+		// Start with the html for the empty panel for the tabbed interface to be added to the page
+		
+		var panelbasehtml = '<div class="wdgt-container"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>Details</h2></div></div></div></div><div class="wdgt-content"></div><div class="wdgt-footer"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div>';
+		
+		// Check the API data for brochure page content
+		
+		var brochurehtml = '';
+		if (data.DETAILS.PROGRAM_BROCHURE != "") {
+			
+			// Create a container with that HTML
+			
+			var brochurehtml = data.DETAILS.PROGRAM_BROCHURE;
+			
+		}
+		
+		// Check the API data for budget sheets and courses. Budget sheet URLs will go in array for each term. The courses just have a flag indicating a link to the program's foreign course search should be displayed.
+		
+		var budgetdata = new Array();
+		if (data.DETAILS.BUDGETSHEETS != "") {
+		
+			// When there is 'BUDGET_TITLE' in the node 'data.DETAILS.BUDGETSHEETS.BUDGET' instead of an array of values, it means that there is just one term for the program with a budget sheet and we can just stuff that right into the array and be done parsing.
+		
+			if (data.DETAILS.BUDGETSHEETS.BUDGET.BUDGET_TITLE) {
+				budgetdata.push(data.DETAILS.BUDGETSHEETS.BUDGET.BUDGET_TITLE + "|" + data.DETAILS.BUDGETSHEETS.BUDGET.BUDGET_TERM.LINK.HREF);
+			} else {
+			
+				// Since there are multiple terms for the program with budget sheets, we enumerate over the objects in the 'data.DETAILS.BUDGETSHEETS.BUDGET' node to extract the values.
+			
+				for (var key in data.DETAILS.BUDGETSHEETS.BUDGET) {
+					budgetdata.push(data.DETAILS.BUDGETSHEETS.BUDGET[key].BUDGET_TITLE + "|" + data.DETAILS.BUDGETSHEETS.BUDGET[key].BUDGET_TERM.LINK.HREF);
+				}
+			}
+		}
+		
+		var courseflag = "FALSE";
+		if (data.DETAILS.PROGRAM_EQUIV_ENABLED == "1") {
+			courseflag = "TRUE";
+		}
+		
+		// Check the API data for app cycle/date record information
+		
+		var dates = "FALSE";
+		if (data.DETAILS.DATES != "") {
+			dates = "TRUE";
+			var datesdata = new Array();
+			
+			// Get all the date data into an array
+			
+			if (data.DETAILS.DATES.DATE.APP_TERM) {
+			
+				// When there is 'APP_TERM' in the node 'data.DETAILS.DATES.DATE' instead of an array of values, it means that there is just one app cycle with data, and we can just stuff that right into the array and be done parsing.
+			
+				datesdata.push([data.DETAILS.DATES.DATE.OVERRIDE,data.DETAILS.DATES.DATE.OVERRIDE2,data.DETAILS.DATES.DATE.APP_TERM,data.DETAILS.DATES.DATE.APP_YEAR,data.DETAILS.DATES.DATE.BDUALYEARTERM,data.DETAILS.DATES.DATE.TERM_START,data.DETAILS.DATES.DATE.TERM_END]);
+			} else {
+			
+				// Since there are multiple app cycles for the program with date information, we enumerate over the objects in the 'data.DETAILS.DATES.DATE' node to extract the values.
+			
+				for (var key in data.DETAILS.DATES.DATE) {
+					datesdata.push([data.DETAILS.DATES.DATE[key].OVERRIDE,data.DETAILS.DATES.DATE[key].OVERRIDE2,data.DETAILS.DATES.DATE[key].APP_TERM,data.DETAILS.DATES.DATE[key].APP_YEAR,data.DETAILS.DATES.DATE[key].BDUALYEARTERM,data.DETAILS.DATES.DATE[key].TERM_START,data.DETAILS.DATES.DATE[key].TERM_END]);
+				}
+			}
+		}
+		
+		// Add the empty container panel to the page
+		
+		$('#brochure-tabs').html(panelbasehtml);
+		
+		// Create a container in which we will build the contents of this section
+		
+		var contenthtml = "";
+		
+		// If there's brochure content, we add it to this container.
+		
+		if (brochurehtml != "") {
+			contenthtml = contenthtml + brochurehtml;
+		}
+		
+		// If there is budget sheet data in the array and/or the course flag is true, we need to build this 'div' and add it to the container.
+		
+		if (budgetdata.length > 0 || courseflag == "TRUE") {
+			contenthtml = contenthtml + '<div id="budgetcourses">';
+			if (budgetdata.length > 0) {
+				contenthtml = contenthtml + '<h1>Budget Sheets</h2><select id="selectedterm" onchange="fetchBudget()"><option value="">- Select a term-</option>';
+				
+				// For each term in the budget sheet array, we will create an option that will call the function for fetching the budget sheet information.
+				
+				for (var key in budgetdata) {
+					var budgetoption = budgetdata[key].split('|');
+					contenthtml = contenthtml + '<option value="' + budgetoption[1] + '">' + budgetoption[0] + '</option>';
+				}
+				contenthtml = contenthtml + '</select><div id="budgetsheet" class="data-container"></div>'
+			}
+			if (courseflag == "TRUE") {
+			
+				// When there are foreign courses for the program, a section on this tab is created with a link to the course search page for this program
+			
+				contenthtml = contenthtml + '<h1>Courses</h2><div id="foreigncourses">There is a course list available for this program: <input type="button" value="View Program Courses" class="actionbutton" onclick="window.open(\'' + data.DETAILS.COURSES_OFFERED.LINK.HREF + '\', \'newwindow\')"></div>';
+			}
+			contenthtml = contenthtml + '</div>';
+		}
+		
+		// Check to see if there are dates to be added to the brochure page
+		
+		if (dates == "TRUE"){
+			contenthtml = contenthtml + '<div id="dates">';
+			
+			// When there are date records to show, we create the content from the dates array by iterating over the array
+			
+			for (var i=0; i < datesdata.length; i++) {
+			
+				// To handle dual-year terms, we set a string to nothing, then add the extra year to it if the date record is dual-year.
+			
+				var dualyear = '';
+				if (datesdata[i][4] == 1) {
+					var year = datesdata[i][3] + 1;
+					dualyear = '-' + year;
+				}
+				
+				// Create the section for this date record using the term and year data in the array
+				
+				var daterechtml = '<div class="date-record"><h2 class="date-record-termyear">' + datesdata[i][2] + ', ' + datesdata[i][3] + dualyear + ':</h2>';
+				
+				// We use a helper function to change the API's date string into a javascript date object.
+				
+				var appdeadline = new Date(reformatdate(datesdata[i][0]));
+				var decdate = new Date(reformatdate(datesdata[i][1]));
+				var startdate = new Date(reformatdate(datesdata[i][5]));
+				var enddate = new Date(reformatdate(datesdata[i][6]));
+				
+				// There is always an application deadline so we add that to the date section's html
+				
+				daterechtml = daterechtml + '<span class="date-record-dates">Application Deadline: ' + appdeadline.getMonth() + '-' + appdeadline.getDate() + '-' + appdeadline.getFullYear() + '</span>';
+				
+				// For decision dates, we only display the decision date when it is after the application deadline. Otherwise, it is rolling admission and irrelevant to the applicants.
+				
+				if (appdeadline < decdate) {
+					daterechtml = daterechtml + '<span class="date-record-dates">Decision Date: ' + decdate.getMonth() + '-' + decdate.getDate() + '-' + decdate.getFullYear() + '</span>';
+				}
+				
+				// If there are start and end dates in the date record, they are added to the content.
+				
+				if (startdate != 'Invalid Date') {
+					daterechtml = daterechtml + '<span class="date-record-dates">Start Date: ' + startdate.getMonth() + '-' + startdate.getDate() + '-' + startdate.getFullYear() + '</span>';
+				}
+				if (enddate != 'Invalid Date') {
+					daterechtml = daterechtml + '<span class="date-record-dates">End Date: ' + enddate.getMonth() + '-' + enddate.getDate() + '-' + enddate.getFullYear() + '</span>';
+				}
+				
+				// Close up this date record's section
+				
+				contenthtml = contenthtml + daterechtml + '</div>';
+			}
+			
+			// Close up the dates section of the brochure content
+			
+			contenthtml = contenthtml + '</div>';
+			
+		}
+		
+		// If there is content for the brochure, we add it to the page's container and reveal the first tab's content section.
+		
+		if (contenthtml != "") {
+			$('#brochure-tabs .wdgt-content').append('<div id="brochure-tabs-content">' + contenthtml + '</div>');
+			$('#brochure-tabs-content div').first().css('display','block');
+		}
+		
+		// The navigation tabs are built as an unordered list by checking to see if it is necessary to add each tab - the css will handle the formatting
+		
+		var contenthtml = "<ul>";
+		if (brochurehtml != "") {
+			if ($('#brochure-tabs-content #general').length > 0) {
+				contenthtml = contenthtml + '<li class="section-tab">General</li>';
+			}
+			if ($('#brochure-tabs-content #academic').length > 0) {
+				contenthtml = contenthtml + '<li class="section-tab">Academic</li>';
+			}
+			if ($('#brochure-tabs-content #exchange').length > 0) {
+				contenthtml = contenthtml + '<li class="section-tab">Exchange</li>';
+			}
+			if (budgetdata.length > 0 || courseflag == "TRUE") {
+				contenthtml = contenthtml + '<li class="section-tab">Costs/Courses</li>';
+			}
+			if (dates == "TRUE") {
+				contenthtml = contenthtml + '<li class="section-tab">Dates/Deadlines</li>';
+			}
+		}
+		
+		// If we added any tabs to the container for the navigation, we put it at the beginning of the brochure's container and assign the css class to the first tab that will make it the active tab.
+		
+		if (contenthtml != "<ul>") {
+			$('#brochure-tabs .wdgt-content').prepend('<div id="brochure-tabs-navigation">' + contenthtml + '</ul></div>');
+			$('#brochure-tabs-navigation li').first().addClass('selected-section-tab');
+		}
+		
+		// Add the click event handlers to the panel's tabs so that they call the showBrochurePanel function with the name of the tab to show.
+		
+		$('#brochure-tabs-navigation li').click(function () {
+			showBrochurePanel( $(this).text() );
+		});
+	}
+
+	// The function that handles the brochure tab switches first hides everything, then reveals the section that was passed to it and makes that tab the active tab by assigning the css class to it.
+	
+	function showBrochurePanel(whichone) {
+		$('#brochure-tabs-content > div').css('display','none');
+		$('#brochure-tabs-navigation li').removeClass('selected-section-tab');
+		$('#brochure-tabs-navigation li:contains(' + whichone + ')').addClass('selected-section-tab');
+		switch (whichone) {
+			case "General":
+				$('#general').css('display','block');
+				break;
+			case "Academic":
+				$('#academic').css('display','block');
+				break;
+			case "Exchange":
+				$('#exchange').css('display','block');
+				break;
+			case "Costs/Courses":
+				$('#budgetcourses').css('display','block');
+				break;
+			case "Dates/Deadlines":
+				$('#dates').css('display','block');
+				break;
+		}
+	}
+	
+	// This function handles the selection of a budget sheet term from the drop-down menu
+	
+	function fetchBudget() {
+	
+		// Get the selected option's value
+		
+		var budgeturl = $("#selectedterm").val();
+		
+		// Empty out the container for the budget sheet's content
+		
+		$("#budgetsheet").html("");
+		
+		// Unless the user selected the default option, fetch just the content table of the budget sheet using jQuery's .load() function and put it in the container.
+		
+		if (budgeturl == "") {
+			return;
+		} else {
+			$("#budgetsheet").load(budgeturl + " .data-table");
+		}
+	}
+	
+	// Help function that adjusts our date string into one that can be turned into a Date object. It is used when building the list item for program date records.
+	
+	function reformatdate(datestring) {
+		var splitdate1 = datestring.split(' ');
+		var splitdate2 = splitdate1[0].split('-');
+		return splitdate2[1] + " " + splitdate2[2] + ", " + splitdate2[0];
+	}
+</script>
