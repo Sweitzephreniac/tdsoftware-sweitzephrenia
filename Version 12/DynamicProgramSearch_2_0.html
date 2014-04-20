@@ -187,9 +187,24 @@
 		
 		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option.
 		
+		// Add names of parameters you wish to not show up to the list below, inside quotation marks, and separated by a comma, e.g. ["Proposal", "Other", "Fall-Winter Terms", "Summer-Fall Terms"]
+		var excludeTheseParamsArray = []
+		var excludeObject = oc(excludeTheseParamsArray);
+		
+		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option.
+		
 		for (var paramoption in data.OPTIONS.OPTION) {
-			if (data.OPTIONS.OPTION[paramoption].NAME != "Any") {$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + data.OPTIONS.OPTION[paramoption].NAME.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + data.OPTIONS.OPTION[paramoption].NAME + '</label><br>');}
+			if ((data.OPTIONS.OPTION[paramoption].NAME != "Any") && (!(data.OPTIONS.OPTION[paramoption].NAME in excludeObject)))
+			{$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + data.OPTIONS.OPTION[paramoption].NAME.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + data.OPTIONS.OPTION[paramoption].NAME + '</label><br>');}
 		}
+	}
+	
+	function oc(a) {
+  		var o = {};
+  		for(var i=0;i<a.length;i++) {
+    		o[a[i]]='';
+  		}
+  		return o;
 	}
 	
 	// This function will check to see if the user has any of the interface's options in her/his cookies and set the page back to the way it was the last time the user was here.
