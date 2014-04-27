@@ -428,25 +428,52 @@
 	
 	// This function creates the markers and the information windows that appear when you mouse over one of the markers.
 	
-	function drawMarkers(markers, worldmap) {
+	function drawMarkers(markers, worldmap){
 		var markerArray = new Array();
 		var infowindow = new google.maps.InfoWindow();
-		for (var item=0; item < markers.length; item++) {
-			var progInfo = markers[item].split("||");
-			var progLatlng = new google.maps.LatLng(progInfo[0],progInfo[1]);
-			var contentString = '<div style="line-height:1.35; overflow:hidden; white-space:nowrap;"><a href="' + sitedomain + 'index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + progInfo[2] + '">' + progInfo[3] + '</a></div>';
-			markerArray[item] = new google.maps.Marker({
-				position: progLatlng,
+		var markerDataArray = new Array();
+		// For each marker, create a google maps latlng object, then get programInfo, and content string and title
+		// Assign the four variables to a markerData object and store each in the markerDataArray
+		for (var i = 0; i < markers.length; i++){
+			var progInfo = markers[i].split("||");
+			var markerData = new Object();
+			markerDataArray[i] = markerData;
+			markerDataArray[i].position = new google.maps.LatLng(progInfo[0],progInfo[1]);
+			markerDataArray[i].contentString = '<div style="line-height:1.35; overflow:hidden; white-space:nowrap;"><a href="' + sitedomain + 'index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + progInfo[2] + '">' + progInfo[3] + '</a></div>';
+			markerDataArray[i].title = progInfo[3];
+		}
+		// Compare positions of each marker 
+		// If positions are the same, and titles are different, concatenate the contentString and title and remove the marker with the duplicate location
+		// Splice removes the element at j and moves the remaining elements up, filling j's place with the next element
+		// So decrement j in order to check the new element in the next loop
+		for (var i = 0; i < markerDataArray.length; i ++){
+			for (var j = 0; j < markerDataArray.length; j++){
+				if (markerDataArray[i].position.equals(markerDataArray[j].position)){
+					if (markerDataArray[i].title.valueOf() != markerDataArray[j].title.valueOf()) {
+						markerDataArray[i].contentString = markerDataArray[i].contentString + markerDataArray[j].contentString;
+						markerDataArray[i].title = markerDataArray[i].title + "/n" + markerDataArray[j].title;
+						markerDataArray.splice(j, 1);
+						j = j - 1;
+					}
+				}
+			}	
+		}	
+		// create a google maps marker, using position, map, and title from the markerDataArray array
+		for (var i = 0; i < markerDataArray.length; i ++){
+			markerArray[i] = new google.maps.Marker({
+				position: markerDataArray[i].position,
 				map: worldmap,
-				title: progInfo[3]
+				title: markerDataArray[i].progInfo
 			});
-			markerArray[item].set('popup', contentString);
-			google.maps.event.addListener(markerArray[item], 'mouseover', function() {
+			// set the popup window on each marker, and add a mouseover function
+			markerArray[i].set('popup', markerDataArray[i].contentString);
+			google.maps.event.addListener(markerArray[i], 'mouseover', function() {
 				infowindow.setContent(this.get('popup'));
 				infowindow.open(worldmap,this);
 			});
 		}
 	}
+
 	
 	// This function iterates over each of checkboxes in the criteria widgets and saves them in a cookie so that we check during the initialization routine. This function is called at the end of the event-handler we set up for whenever a checkbox is marked or un-checked.
 	
