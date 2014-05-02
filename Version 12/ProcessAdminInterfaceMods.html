@@ -1,0 +1,27 @@
+<script>
+	//* add to text interface fields# 8535, 3971, 11788, 11787 *//
+	$(document).ready(function(){
+		// avoiding the problematic border tables
+		$('table[summary*="table showing existing questionnaires"]').first().prev().remove();
+		// add the title attribute for the materials page
+		$('a[href*="FuseAction=ProcessAdmin.MaterialsView"]').attr('title','Click to Preview');
+		// add the toggle event handlers
+		$('.data-header').click(function() {
+			$(this).next().toggle();
+		});
+		// add the filter field
+		$('a[href*="ViewRetired=1"]').before('Filter: <input id="element-filter" type="text" value="" maxlength="20">&nbsp;&nbsp;');
+		// add the filter field event handler
+		$('#element-filter').keyup(function() {
+			var filter = $(this).val().toLowerCase();
+			$('a[title="Click to Preview"]').each(function (){
+				var elementname = $(this).text().toLowerCase();
+				if (elementname.indexOf(filter) != -1) {
+					$(this).parent().parent().css('display', 'table-row');
+				} else {
+					$(this).parent().parent().css('display', 'none');
+				}
+			});
+		});
+	});
+</script>
