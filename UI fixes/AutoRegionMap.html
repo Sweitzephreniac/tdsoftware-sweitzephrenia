@@ -1,0 +1,15 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* to implement this javascript, add these lines to the text interface fields#5920 and 5919 */
+	var regionHashtableURL = "#URL OF DOCUMENT CENTER SCRIPT#";
+	$(document).ready(function() {
+		$.getScript(regionHashtableURL, function() {
+			$("#selCountry").change(function() {
+				findRegion($("#selCountry").val());
+			});
+			$("#selCountryEdit").change(function() {
+				findRegion($("#selCountryEdit").val());
+			});
+		});
+	});
+</script>

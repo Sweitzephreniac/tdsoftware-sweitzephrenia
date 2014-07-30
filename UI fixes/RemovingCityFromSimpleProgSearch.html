@@ -1,0 +1,9 @@
+<script language="JavaScript" type="text/javascript">
+	/* Tested in TDS 14.0 */
+	/* add this script to text interface# 402 - Simple search tips */
+	$(document).ready(function(){
+		$("label:contains('City')").remove();
+		$('#selProgCity').nextUntil('label').remove();
+		$('#selProgCity').remove();
+	});
+</script>

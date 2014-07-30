@@ -1,0 +1,115 @@
+<html>
+	<!-- Tested in TDS 14.0 -->
+	<!-- This HTML document should be uploaded to the document center. It is the page that will generate the output -->
+	<head>
+		<style>
+			@media all {
+				.page-break	{ display: none; }
+			}
+			@media print {
+				.page-break	{ display: block; page-break-before: always; }
+			}
+			#report_data {
+				display: none;
+			}
+			#main_container {
+				font-family: Arial,Helvetica,sans-serif;
+			}
+			#main_container h1 {
+				background-color: #ccc;
+			}
+			#main_container h2 {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+			#main_container h3 {
+				margin-top: 0px;
+				margin-bottom: 3px;
+			}
+			#main_container .coredata {
+				border-style:solid;
+				border-width:5px;
+				border-color: #ccc;
+			}
+			#main_container .parameterdata {
+				border-style:solid;
+				border-width:5px;
+				border-color: #ccc;
+			}
+			#main_container .addressdata {
+				padding: 0px 10px 10px 10px;
+			}
+		</style>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js">
+		</script>
+	</head>
+	<body>
+		<div id="report_data">
+		</div>
+		<div id="main_container">
+		</div>
+		<script>
+			$(document).ready(function(){
+				// get the query and report ID# out of the URL
+				var reportid = gup('ReportID');
+				var queryid = gup('QueryID');
+				var sitedomain = document.URL.split('_customtags');
+				var reporturl = sitedomain[0] + 'index.cfm?FuseAction=Administration.ReportWizard_2&Unwrap=1&ExportAsExcel=0&CombQueryandReport=1&Search_ID=' + queryid + '&Report_ID=' + reportid;
+				// fetch the data and load into the hidden div
+				var profileData = new Array();
+				$('#report_data').load(reporturl + ' table[cellpadding="4"]', function() {
+					// process the data into an array
+					$('#report_data tr').each(function(index) {
+						// iterating over each row in the data - skipping the header row
+						if (index!=0) {
+							var content = '';
+							$(this).children('td').each(function(index2) {
+								// iterating through each block of data in the row
+								if (content != '') {content = content + "|";}
+								if (index2==10) {
+									// when the content row is an address, we want the full html of the data
+									content = content + $(this).html().trim();
+								} else {
+									// when the content row isn't an address, we just grab the text of the data
+									content = content + $(this).text().trim();
+								}
+							});
+							profileData.push(content);
+						}
+					});
+					// build the report in the main container
+					var profilehtml = '';
+					for (var i = 0; i < profileData.length; i++) {
+						var profilecontents = profileData[i].split('|');
+						var profilehtml = profilehtml + '<div class="header"><h1>';
+						profilehtml = profilehtml + profilecontents[0] + '<br>(userid# ' + profilecontents[1] + ')</h1></div>';
+						profilehtml = profilehtml + '<div class="coredata">';
+						profilehtml = profilehtml + '<h2>Email address: ' + profilecontents[5] + '</h2>';
+						profilehtml = profilehtml + '<h2>Date of birth: ' + profilecontents[6] + '</h2>';
+						profilehtml = profilehtml + '<h2>Gender: ' + profilecontents[4] + '</h2>';
+						profilehtml = profilehtml + '<h2>Profile created: ' + profilecontents[2] + '</h2>';
+						profilehtml = profilehtml + '<h2>Profile last updated: ' + profilecontents[3] + '</h2></div>';
+						profilehtml = profilehtml + '<div class="parameterdata">';
+						profilehtml = profilehtml + '<h3>Major: ' + profilecontents[7] + '</h3>';
+						profilehtml = profilehtml + '<h3>Class: ' + profilecontents[8] + '</h3>';
+						profilehtml = profilehtml + '<h3>Ethnicity: ' + profilecontents[9] + '</h3>';
+						profilehtml = profilehtml + '<br><h3>Emergency Contact:</h3><div class="addressdata">' + profilecontents[10] + '</div></div>';
+						profilehtml = profilehtml + '<div class="page-break"></div>';
+					}
+					$('#main_container').html(profilehtml);
+				});
+			});
+			
+			function gup(name){
+				name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+				var regexS = "[\\?&]"+name+"=([^&#]*)";
+				var regex = new RegExp( regexS );
+				var results = regex.exec( window.location.href );
+				if( results == null )
+					return "";
+				else
+					return results[1];
+			}
+		</script>
+	</body>
+</html>

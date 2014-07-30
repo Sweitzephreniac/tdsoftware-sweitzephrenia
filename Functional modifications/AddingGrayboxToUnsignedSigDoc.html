@@ -1,0 +1,14 @@
+<!-- Tested in TDS 14.0 -->
+<!-- append this to text interface field# 56 (or the tips field for the proper phase of deployment) -->
+<a class="fancybox" href="#URL OF THE DOCUMENT CENTER OBJECT#"></a>
+<script>
+	$(".fancybox").fancybox();
+	$(document).ready(function(){
+		var sigdoc = "#NAME OF THE SIGNATURE DOCUMENT#";
+		var imgname = $('a[title*="'+sigdoc+'"]').parent().next().children('div').attr("title");
+		if (imgname == "Not Received") {
+			console.log('OK');
+			setTimeout(function(){$('.fancybox').click();},500);
+		}
+	});
+</script>

@@ -1,0 +1,495 @@
+<!-- Tested in TDS 14.0 -->
+
+<!-- Containers that will be used for the search interfaces -->
+<!-- They start empty and get populated by the javascript that runs -->
+<!-- NOTE: These containers make use of the Terra Dotta Software CSS classes -->
+
+<div id="progsearch-interface-container">
+	<h2>Find a program:</h2>
+</div>
+<div id="map-container">
+	<div class="wdgt-container">
+		<div class="wdgt-header">
+			<div class="wdgt-header-left">
+				<div class="wdgt-header-right">
+					<div class="wdgt-header-center">
+						<h2>Map</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wdgt-content" id="map-canvas"></div>
+		<div class="bottom-layer">
+			<div class="bottom-layer-left">
+				<div class="bottom-layer-right">
+					<div class="bottom-layer-center"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="progsearch-results-container">
+	<div class="wdgt-container">
+		<div class="wdgt-header">
+			<div class="wdgt-header-left">
+				<div class="wdgt-header-right">
+					<div class="wdgt-header-center">
+						<h2>Programs Available</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wdgt-content"></div>
+		<div class="wdgt-footer"></div>
+		<div class="bottom-layer">
+			<div class="bottom-layer-left">
+				<div class="bottom-layer-right">
+					<div class="bottom-layer-center"> </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Style definitions for the containers -->
+<!-- They are hidden by default and get revealed by javascript -->
+
+<style type="text/css">
+	#progsearch-interface-container {
+		display: none;
+	}
+	#progsearch-results-container, #map-container {
+		display: none;
+		box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+	}
+	#map-canvas {
+		height: 350px;
+	}
+	.search-criteria {
+		display: inline-block;
+		vertical-align: top;
+		margin: 10px;
+		box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+	}
+	.param-options {
+		padding: 10px !important;
+	}
+	.bg-hover-color {
+		background-color: #A7FF76;
+	}
+</style>
+
+<!-- Script that sets up the interface and performs the searches -->
+
+<script language="JavaScript" type="text/javascript">
+
+	//
+	// INITIALIZATION ROUTINES
+	//
+	// There are a few parts to initializing the page. First, there are three global variables that are getting set that will be used throughout the functionality. Next, there is the function that gets called when the page is done loading. It will make the API call to fetch the term, region, and parameter criteria information from the site that will be used to build the interface. It also calls the function to load the Google Maps API script that is needed. The third part is that function.
+
+	// These are the global configuration parameters. At this time, the 'searchparameters' option is not supported. Only the terms and regions will display as filter criteria for the program searches
+
+	var sitedomain = "//#SITE DOMAIN HERE#/";
+	var searchparameters = "";
+	var mapsapikey = "#GOOGLE API KEY HERE";
+	
+	// This is the function that is called when the page finishes loading.
+	
+	$(document).ready(function(){
+	
+		// The URL for the API call to fetch the site's terms, regions, and (if necessary) parameter options is constructed here.
+	
+		var apiUrl = sitedomain + 'api/index.cfm?callName=getProgramSearchElements&terms=yes&region=yes';
+		if (searchparameters != "") {
+			apiUrl = apiUrl + "&parameters=yes&param_ids=" + searchparameters.replace(/,/g,"%2C");
+		}
+		apiUrl = apiUrl + '&ResponseEncoding=json&callBackName=buildInterface&jsoncallback=?';
+		
+		// This command is the AJAX call that will fetch the data. It has a callback function defined to run the interface builder when the API sends back the requested data.
+		
+		$.getJSON(apiUrl);
+		
+		// If there is a Google API key provided, this command calls the function that loads the Google Maps API script
+		
+		if (mapsapikey != "") {
+			loadMapScript();
+		}
+	});
+
+	// This function builds the 'script' tag for the Google Maps API script with your Google Maps API key and inserts it into the page's body (which results in the script getting loaded and executed).
+
+	function loadMapScript() {
+		var script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.src = '//maps.googleapis.com/maps/api/js?key=' + mapsapikey + '&sensor=false&callback=buildMap';
+		document.body.appendChild(script);
+	}
+	
+	//
+	// INTERFACE BUILDER
+	//
+	// There are four functions here involved with building the interface of the program search. They will take the information provided back from the site's API to build the interface, but they will also check the user's cookies to see if it is necessary to set the options back the way they were the last time the user was on the page (and run that particular search again).
+	
+	// This is the callback function from the initialization routine's API call. It is receiving a JSON object with all the term, region, and parameter option data in it so that the interface can be built using it.
+
+	function _cb_buildInterface(data) {
+	
+		// For each ELEMENT In the data returned by the API, a criteria widget is going to be built in the search form by passing that ELEMENT node in the JSON packet to the function.
+
+		for (var item in data.ELEMENT) {
+			buildCriteriaWidget(data.ELEMENT[item]);
+		}
+
+		// The interface is now built. This function call will check the user's cookies to see if the page needs to be set back to the search
+
+		checkCookies();
+
+		// The interface is now built so we can reveal the criteria options by adjusting the style attribute of the container
+
+		$("#progsearch-interface-container").css("display","block");
+
+		// We set an event handler on all the checkboxes (input tags) in the interface so that when they change, the results builder function (updateResults) gets called.
+
+		$("#progsearch-interface-container input").change(function() {
+			updateResults();
+		});
+	}
+
+	// This function is used to build and insert a criteria widget from an ELEMENT node of the API data we fetched.
+	
+	function buildCriteriaWidget(data) {
+	
+		// The HTML of the widget is stored in a variable that includes both the name of the criteria as the header and an ID for the content 'div' of the widget that can be used to specifically select it.
+	
+		var widgetHtml = '<div class="wdgt-container search-criteria"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>' + data.DISPLAY_NAME + '</h2></div></div></div></div><div class="wdgt-content param-options" id="' + data.FORM_NAME + '-options"></div><div class="wdgt-footer"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"> </div></div></div></div></div>';
+		
+		// This jQuery command adds the empty widget to the interface container on the page
+		
+		$("#progsearch-interface-container").append(widgetHtml);
+		
+		// There needs to be a hidden input field for each criteria to identify what API parameter should be used when constructing the API call to find programs using this criteria. In addition, if it is a program parameter criteria widget, it is necessary to also store what type of program parameter it is in a hidden field as well.
+		
+		var apiparam = data.FORM_NAME;
+		if (apiparam.substring(0,2) != "p_") {
+		
+			// The criteria isn't a program parameter so the API parameter is just the display name (term or region)
+		
+			apiparam = data.DISPLAY_NAME;
+		} else {
+		
+			// The criteria is a program parameter so we add the extern hidden field that identifies the parameter's type and we leave the API parameter alone because it is already correct.
+		
+			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="pparamtype" value="' + apiparam + '_t=' + data.PARAM_TYPE + '">');
+		}
+		
+		// This line adds the hidden field that has the full API parameter that is used. It currently is not correct for program parameters. It will only support the term and region search criteria at this time.
+		
+		$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="urlparam" value="&' + apiparam + '=">');
+		
+		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option.
+		
+		// Add names of parameters you wish to not show up to the list below, inside quotation marks, and separated by a comma, e.g. ["Proposal", "Other", "Fall-Winter Terms", "Summer-Fall Terms"]
+		var excludeTheseParamsArray = []
+		var excludeObject = oc(excludeTheseParamsArray);
+		
+		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option.
+		
+		for (var paramoption in data.OPTIONS.OPTION) {
+			if ((data.OPTIONS.OPTION[paramoption].NAME != "Any") && (!(data.OPTIONS.OPTION[paramoption].NAME in excludeObject)))
+			{$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + data.OPTIONS.OPTION[paramoption].NAME.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + data.OPTIONS.OPTION[paramoption].NAME + '</label><br>');}
+		}
+	}
+	
+	function oc(a) {
+  		var o = {};
+  		for(var i=0;i<a.length;i++) {
+    		o[a[i]]='';
+  		}
+  		return o;
+	}
+	
+	// This function will check to see if the user has any of the interface's options in her/his cookies and set the page back to the way it was the last time the user was here.
+	
+	function checkCookies() {
+	
+		// We need a variable to use as a flag to indicate that criteria options got checked because of the user's cookies.
+	
+		var changed = 0;
+		
+		// This jQuery command will iterate through each of the criteria widget boxes
+		
+		$("div .param-options").each(function () {
+		
+			// We get the API parameter for this widget box and fetch the user's cookie information assigned to this value
+		
+			var paramoptions = $(this).find('input[name="urlparam"]').val();
+			var cookieoptions = getCookie(paramoptions);
+			
+			// If the user's value for the cookie isn't empty, it means that there options that might need to be selected.
+			
+			if (cookieoptions != "") {
+			
+				// The options are split into an array. Then, the code iterates over each checkbox in the widget to see if its option is in the users's cookie. When it is, that checkbox gets checked and the changed flag is set to 1 so that the program search will be executed when we're done checking the cookie.
+			
+				cookieoptions = cookieoptions.split("||")
+				$(this).find('input').each(function () {
+					if (cookieoptions.indexOf($(this).val()) > -1) {
+						$(this).attr("checked", true);
+						changed = 1;
+					}
+				});
+			}
+		});
+		
+		// After checking all the criteria widgets, if there were any checkboxes marked, we want to run the program search by calling the 'updateResults' function.
+		
+		if (changed = 1) { updateResults(); }
+	}
+
+	// This helper function extracts a specific cookie key's value from the user's browser.
+
+	function getCookie(cname) {
+		var name = cname + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0; i<ca.length; i++) {
+			var c = ca[i].trim();
+			if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+		}
+		return "";
+	}
+
+	//
+	// PROGRAM SEARCH ROUTINES
+	//
+	// There are a bunch of functions in the results builder, but the first two are the primary ones that fetch and parse the data based on the checkboxes that are marked in the interface.
+	
+	// This function is going to iterate through all the checked boxes and build up the URL needed to make the API call (but only if there were boxes that were checked). It is fired off by the 'change' event-handler we assigned to all the checkboxes in the initialization routine. Whenever a user checks or un-checks a box, this function runs.
+
+	function updateResults(){
+	
+		// The function starts by setting the base URL needed for the API call.
+
+		var searchurl = sitedomain + 'api/index.cfm?callName=getProgramSearchResults';
+		
+		// There are two loops here - the first loops through each set of checkboxes (search criteria)
+		
+		$("div .param-options").each(function () {
+		
+			// To check the criteria, we get that the URL parameter will need to be and set a flag that we can use to determine whether or not any options were checked
+			
+			var paramoptions = $(this).find('input[name="urlparam"]').val();
+			var unchanged = paramoptions;
+			
+			// The second loop goes through each checkbox in the set we're currently looking at
+			
+			$(this).find('input').each(function () {
+			
+				// If the checkbox we're looking at is checked, it adds that checkbox's data to the URL parameter we're building
+			
+				if ($(this).is(':checked')) {
+					if (paramoptions != unchanged) {paramoptions = paramoptions + '%7F%2C';}
+					paramoptions = paramoptions + $(this).val();
+				}
+			});
+			
+			// Now that we've checked all the checkboxes in this set of checkboxes, we see if there were any parameter options that were checked. If there were, we're going to add that to the URL needed for the API call.
+			
+			if (paramoptions != unchanged) {
+				searchurl = searchurl + paramoptions;
+			}
+		});
+		
+		// We call this function to save the checked checkboxes in the user's browser cache as a cookie. That way, if the user returns to this page later, they can be marked off automatically.
+		
+		saveCriteriaCookies();
+
+		// If the variable for storing the URL of the API call has not changed, that means nothing is selected. Hide the search results container and exit the function
+
+		if (searchurl == sitedomain + 'api/index.cfm?callName=getProgramSearchResults') {
+			$("#progsearch-results-container").css("display","none");
+			$('#map-container').css('display','none');
+			return;
+		}
+
+		// We only get to this line if there is search criteria selected. The script adds the JSON encoding paramater and callback names to the URL of the API call and fire off the AJAX request.
+
+		$.getJSON(searchurl + "&ResponseEncoding=json&callBackName=processResults&jsoncallback=?");
+
+		// Nothing left to do here - when the AJAX response comes back, the callback function (_cb_parseResults) will be called with the program search results to be rendered.
+
+	}
+
+	// This function receives the JSON packet with the programs in the search results and builds the HTML to display them in the interface container (progsearch-results-container).
+
+	function _cb_processResults(data) {
+
+		// Completely empty out the current contents of the results container and hide it by adjusting the display style property.
+
+		$('#progsearch-results-container').css('display','none');
+		$('#progsearch-results-container .wdgt-content').html('');
+		if (mapsapikey != "") {
+			$('#map-container').css('display','none');
+		}
+
+		// Set a variable for holding the interface's HTML content with the initial div and table tag, and create an array for holding all the program ID#s that have been added to the interface so that we can check for duplicates.
+
+		var resultsHTML = '<div class="data-table"><table width="100%" cellspacing="0" cellpadding="4" border="0" class="bot-bdr" summary="">';
+		var programInResults = new Array();
+		var markerArray = new Array();
+
+		// If there is only one program in the search results, we need to parse it slightly differently. Check the JSON packet to see if this is the case.
+
+		if (data.ROWCOUNT == 1) {
+
+			// There is only one program in the results, so we just add the tags to the HTML with the anchor link to the program's brochure page
+
+			resultsHTML = resultsHTML + '<tr><td class="bg-white-color"><a title="' + data.PROGRAM.PROGRAM_NAME + '" href="index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + data.PROGRAM.PROGRAM_ID + '">' + data.PROGRAM.PROGRAM_NAME + '</a></td></tr>';
+			programInResults.push(data.PROGRAM.PROGRAM_ID);
+			if (data.PROGRAM.PROGRAM_LATITUDE != "") {
+				markerArray.push(data.PROGRAM.PROGRAM_LATITUDE + "||" + data.PROGRAM.PROGRAM_LONGITUDE + "||" + data.PROGRAM.PROGRAM_ID + "||" + data.PROGRAM.PROGRAM_NAME);
+			}
+		} else {
+
+			// Since we found more than one program in results, we will iterate through each of the programs returned by the search
+
+			for (var item in data.PROGRAM) {
+
+				// Before we add this program, we check to see if the program is not in the array yet because if a program has multiple locations, it will appear in the JSON packet one time for each location assigned to it.
+
+				if (programInResults.indexOf(data.PROGRAM[item].PROGRAM_ID) == -1) {
+
+					// Since it isn't in the array yet, we add the necessary table and anchor tags for the program record to the HTML variable
+
+					resultsHTML = resultsHTML + '<tr><td class="bg-white-color"><a title="' + data.PROGRAM[item].PROGRAM_NAME + '" href="index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + data.PROGRAM[item].PROGRAM_ID + '">' + data.PROGRAM[item].PROGRAM_NAME + '</a></td></tr>';
+
+					// We add the program's ID to the array so that it won't be added again if the program has multiple locations
+
+					programInResults.push(data.PROGRAM[item].PROGRAM_ID);
+				}
+				
+				// We check the program's data to see if there is a latitude. If there is, we're going to add the geo-location data to the array we're using for the markers in the Google map.
+				
+				if (data.PROGRAM[item].PROGRAM_LATITUDE != "") {
+					markerArray.push(data.PROGRAM[item].PROGRAM_LATITUDE + "||" + data.PROGRAM[item].PROGRAM_LONGITUDE + "||" + data.PROGRAM[item].PROGRAM_ID + "||" + data.PROGRAM[item].PROGRAM_NAME);
+				}
+			}
+		}
+
+		// Before we add the HTML to the page, we check to make sure there were results.
+
+		if (programInResults.length > 0) {
+
+			//  Since there are programs in the array, we add the closing tags to the HTML variable and put that HTML in the container.
+
+			resultsHTML = resultsHTML + '</tbody></table></div>';
+			$('#progsearch-results-container .wdgt-content').html(resultsHTML);
+
+			// First, we add the event-handler to each row so that the background will change to a 'hover-color' when you mouse over it. Then, to change every other row in the results to a gray background, if there is no remainder when dividing the row's number of the row by 2 (meaning that it is an odd number), change the background class from white to gray. I'm sure that this could be done purely with CSS, but this works too.
+
+			$('#progsearch-results-container .wdgt-content td').each(function( index ) {
+				$(this).hover( function() {
+					$(this).addClass('bg-hover-color');
+				}, function() {
+					$(this).removeClass('bg-hover-color');
+				});
+				$(this).click( function() {
+					var desturl = $(this).find('a').attr('href');
+					window.location.href=desturl;
+				});	
+				if (index%2 != 0) {$(this).removeClass('bg-white-color').addClass('bg-gray-color');}
+			});
+
+			// Reveal the search results by adjusting the style of the container.
+
+			$('#progsearch-results-container').css('display','block');
+			
+			// Check to see if there is a Google Maps API key and if there were programs with locations that had lat/long data, we're going to reveal the map container and call the functions that build it.
+			
+			if (mapsapikey != "") {
+				if (markerArray.length > 0) {
+					$('#map-container').css('display','block');
+					var worldmap = buildMap();
+					drawMarkers(markerArray, worldmap);
+				}
+			}
+		}
+	}
+
+	// This is the function that builds the map itself using Google's API it will return the map object so that it can be passed to the function that builds the markers
+	
+	function buildMap() {
+		var mapOptions = {
+		center: new google.maps.LatLng(34.033333, -6.85),
+		zoom: 1,
+		disableDefaultUI: true
+		};
+		var worldmap = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
+		return worldmap;
+	}
+	
+	// This function creates the markers and the information windows that appear when you mouse over one of the markers.
+	
+	function drawMarkers(markers, worldmap){
+		var markerArray = new Array();
+		var infowindow = new google.maps.InfoWindow();
+		var markerDataArray = new Array();
+		// For each marker, create a google maps latlng object, then get programInfo, and content string and title
+		// Assign the four variables to a markerData object and store each in the markerDataArray
+		for (var i = 0; i < markers.length; i++){
+			var progInfo = markers[i].split("||");
+			var markerData = new Object();
+			markerDataArray[i] = markerData;
+			markerDataArray[i].position = new google.maps.LatLng(progInfo[0],progInfo[1]);
+			markerDataArray[i].contentString = '<div style="line-height:1.35; overflow:hidden; white-space:nowrap;"><a href="' + sitedomain + 'index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + progInfo[2] + '">' + progInfo[3] + '</a></div>';
+			markerDataArray[i].title = progInfo[3];
+		}
+		// Compare positions of each marker 
+		// If positions are the same, and titles are different, concatenate the contentString and title and remove the marker with the duplicate location
+		// Splice removes the element at j and moves the remaining elements up, filling j's place with the next element
+		// So decrement j in order to check the new element in the next loop
+		for (var i = 0; i < markerDataArray.length; i ++){
+			for (var j = 0; j < markerDataArray.length; j++){
+				if (markerDataArray[i].position.equals(markerDataArray[j].position)){
+					if (markerDataArray[i].title.valueOf() != markerDataArray[j].title.valueOf()) {
+						markerDataArray[i].contentString = markerDataArray[i].contentString + markerDataArray[j].contentString;
+						markerDataArray[i].title = markerDataArray[i].title + "/n" + markerDataArray[j].title;
+						markerDataArray.splice(j, 1);
+						j = j - 1;
+					}
+				}
+			}	
+		}	
+		// create a google maps marker, using position, map, and title from the markerDataArray array
+		for (var i = 0; i < markerDataArray.length; i ++){
+			markerArray[i] = new google.maps.Marker({
+				position: markerDataArray[i].position,
+				map: worldmap,
+				title: markerDataArray[i].progInfo
+			});
+			// set the popup window on each marker, and add a mouseover function
+			markerArray[i].set('popup', markerDataArray[i].contentString);
+			google.maps.event.addListener(markerArray[i], 'mouseover', function() {
+				infowindow.setContent(this.get('popup'));
+				infowindow.open(worldmap,this);
+			});
+		}
+	}
+
+	
+	// This function iterates over each of checkboxes in the criteria widgets and saves them in a cookie so that we check during the initialization routine. This function is called at the end of the event-handler we set up for whenever a checkbox is marked or un-checked.
+	
+	function saveCriteriaCookies() {
+		$("div .param-options").each(function () {
+			var paramoptions = $(this).find('input[name="urlparam"]').val();
+			var optionsselected = "";
+			$(this).find('input').each(function () {
+				if ($(this).is(':checked')) {
+					if (optionsselected != "") {optionsselected = optionsselected + '||';}
+					optionsselected = optionsselected + $(this).val();
+				}
+			});
+			document.cookie = paramoptions + "=" + optionsselected;
+		});
+	}
+</script>

@@ -1,0 +1,88 @@
+<script>
+	// tested in TDS 14.0
+	// append this script to text interface field#3
+	// CONFIGURATION		
+	var sitedomain = "//#PUT YOUR DOMAIN HERE#"
+	// RUNTIME
+	$(document).ready(function(){
+		$('.form-data-container').first().next().next().prepend('<div id="googlemap" style="float:right; padding:10px;"></div>');
+		var programid = $('input[name="Program_ID"]').val();
+		loadLocations(programid);	
+	});	
+    // FUNCTIONS
+    // This function is the callback from the API call that parses the location data for the program
+    function _cb_parseLocation(data) {
+		var appendprogramlong = '';
+		var appendprogramlat = '';
+		var splitprogramlong = '';
+		var splitprogramlat = '';
+		var arr_locations = new Array(0);
+		if (data) {
+			for (var key in data) {
+				if (key && typeof data[key]=='object') {
+					var locObj = data[key];
+					for (var key2 in locObj) {
+						if(key2 == 'program_latitude') {
+							for (var key3 in locObj[key2]) {
+								if (key3!='') {
+									if(appendprogramlat==''){
+										appendprogramlat = locObj[key2][key3];
+									} else {
+										appendprogramlat = appendprogramlat + '||' + locObj[key2][key3];
+									}
+								}
+							}
+						}
+						if(key2 == 'program_longitude') {
+							for (var key3 in locObj[key2]) {
+								if (key3!='') {
+									if(appendprogramlong==''){
+										appendprogramlong = locObj[key2][key3];
+									} else {
+										appendprogramlong = appendprogramlong + '||' + locObj[key2][key3];
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			if (appendprogramlong != '') {
+				if(typeof appendprogramlong == 'number'){
+					splitprogramlat = new Array(0);
+					splitprogramlat[0] = appendprogramlat;
+					splitprogramlong = new Array(0);
+					splitprogramlong[0] = appendprogramlong;
+				} else {
+					splitprogramlat = appendprogramlat.split('||');
+					splitprogramlong = appendprogramlong.split('||');
+				}
+				var k = 0;
+				for(i=0;i<splitprogramlat.length;i++){
+					arr_locations[k]= new Array(0);
+					arr_locations[k][0] = splitprogramlong[i];
+					arr_locations[k][1] = splitprogramlat[i];
+					k = k + 1;
+				}
+			} else {
+				arr_locations[0]= new Array(0);
+				arr_locations[0][0]= '[none]';
+			}
+		}
+  		var mapurl = '<img src="//maps.googleapis.com/maps/api/staticmap?zoom=2&maptype=terrain&size=275x200&sensor=false';    	
+      	for (var maplocation in arr_locations) {
+       		if(arr_locations[maplocation][0]!='[none]') {
+       			mapurl = mapurl + '&markers=%7C' + arr_locations[maplocation][1] + ',' + arr_locations[maplocation][0];
+       		}
+       	} 	
+     	mapurl = mapurl + '">';
+       	if(mapurl=='<img src="//maps.googleapis.com/maps/api/staticmap?zoom=2&maptype=terrain&size=275x200&sensor=false">') {
+     		mapurl='<center>Sorry, no lat/long data for this program</center>';
+       	}
+     	$('#googlemap').html(mapurl);
+     }
+    // This function makes the ajax call to fetch the brochure content      
+    function loadLocations(progid) {
+		$.getJSON(sitedomain + 'api/index.cfm?callName=getProgramLocations&ResponseEncoding=JSON&Program_ID=' + progid + '&callBackName=parseLocation&jsoncallback=?');
+    }
+</script>

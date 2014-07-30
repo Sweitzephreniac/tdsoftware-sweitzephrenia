@@ -1,0 +1,19 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append to text interface field # 351 */
+	$(document).ready(function() {
+		var reasonarray = ["financial","course credit","just cuz"];
+		$('#taComments').parent().css('display','none').before('<div class="padding left-bdr rightbdr"><select id="reasondd"></select></div>');
+		for (var i=0; i < reasonarray.length; i++) {
+			$('#reasondd').append('<option value="' + reasonarray[i] + '">' + reasonarray[i] + '</option>');
+		}
+		$('#reasondd').append('<option value="other">other</option>').change(function() {
+			var reason = $('#reasondd').val()
+			if (reason != 'other') {
+				$('#taComments').val(reason).parent().css('display','none');
+			} else {
+				$('#taComments').val('').parent().css('display','block');
+			}
+		});
+	});
+</script>

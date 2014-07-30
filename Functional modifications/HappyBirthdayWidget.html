@@ -1,0 +1,15 @@
+<div id="birthdaycheck" style="display:none"></div>
+<script>
+	/* Tested in TDS 14.0 */
+	/* append to text interface fields#39 and 6511*/
+	$(document).ready(function(){
+		$('#birthdaycheck').load('index.cfm?FuseAction=Students.ProfileEdit .date-label:first', function() {
+			var cakeid = "#IMAGE ID OF BIRTHDAY CAKE#";
+			var userbd = new Date($.trim($('#birthdaycheck div').text()));
+			var currentdate = new Date();
+			if (userbd.getMonth() == currentdate.getMonth() && userbd.getDate() == currentdate.getDate()) {
+				$('div .wdgt-container:first').before('<div class="wdgt-container"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>Happy Birthday!</h2></div></div></div></div><div class="wdgt-content" style="padding: 5px;"><center><img alt="Birthday Cake" src="_customtags/ct_Image.cfm?Image_ID=' + cakeid + '" title="Birthday Cake" /></center></div><div class="wdgt-footer"></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"> </div></div></div>');
+			}
+		});
+	});
+</script>

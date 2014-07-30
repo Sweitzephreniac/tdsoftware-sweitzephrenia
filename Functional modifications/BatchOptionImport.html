@@ -1,0 +1,42 @@
+<script>
+/* Tested in TDS 14.0 */
+/* Append this script to text interface fields 6025 and 6143 */
+	$(document).ready(function(){
+		$(".option-builder-content-left").append('</br><input class="Button" type="button" onClick="toggleBatch();" value="Add Option List">');
+		$(".option-builder-content").append('<div id="batchOptionArea" style="display: none; padding-left: 0px;margin-left: 10px;margin-bottom: 10px;"></br><p>Add a list of comma separated values to the options here.</p><textarea id="batchOptionImport" rows="5" name="batchTextArea"></textarea><input class="Button" type="button" onClick="addBatch();" value="Add To Options"><input class="Button" type="button" onClick="getBatch();" value="Get Current Values"></div>');
+	});
+	function toggleBatch(){
+		var displayed = $('#batchOptionArea').css("display");
+		if (displayed == "none")
+			{
+				$('#batchOptionArea').css("display", "block");
+			}
+		else
+			{
+				$('#batchOptionArea').css("display", "none");
+			}
+	}	
+	function addBatch(){
+		var list = $("#batchOptionImport").val();
+		var myOptions = list.split(',');
+		var counter = 0;
+		
+		for (counter=0; counter<myOptions.length; counter++)
+			newaddOption(myOptions[counter],myOptions[counter],true);
+
+		$("#batchOptionImport").val('');
+	}
+	function getBatch(){
+		var list = '';
+		
+		$("#selSelected > option").each(function(index) {
+			if (index == 0) {
+				list = $(this).val();
+			} else {
+			list = list  + ',' + $(this).val();
+			}
+		});	
+		$("#batchOptionImport").val(list);
+		$("#selSelected > option").remove();
+	}
+</script>

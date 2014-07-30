@@ -1,0 +1,8 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append this script to text interface field#2021 to replace options with custom institutions */
+	$(document).ready(function(){
+		$('#otherInstitution').attr('id','otherInstitutionNotUsed');
+		$('select[name*="FSC_STATE"]').parent().replaceWith('<select id="otherInstitution" class="percent100" size="10" name="User_External_Institution"><option value="Sweitzer University">Sweitzer University</option><option value="Sweitzer College">Sweitzer College</option><option value="Sweitzer Polytechnic">Sweitzer Polytechnic</option></select><select id="selFSCCode" class="percent100" size="10" name="FSC_Code" style="display: none;"><option value="">--- Other/Not found ---</option></select>');
+	});
+</script>

@@ -1,0 +1,14 @@
+<!-- Tested in TDS 14.0 -->
+<!-- This script for creating the duplicate icons should be added to the admin home page tips text (Field# 6511) -->
+<script>
+	$(document).ready(function(){
+		// check for any saved queries on the page
+		// if yes, then iterate through them
+		$('div[title="Edit Query"]').parent().each(function() {
+			// get the URL of the saved query edit pencil
+			var dupeurl = this.href + "&Dupe=1";
+			// create a new icon of that URL but with the extra parameter
+			$(this).after('<a title="Duplicate Query" href="' + dupeurl + '"><div class="sprites_icons ico_duplicate absmiddle" title="Duplicate Query"></div></a>');
+		});
+	});
+</script>

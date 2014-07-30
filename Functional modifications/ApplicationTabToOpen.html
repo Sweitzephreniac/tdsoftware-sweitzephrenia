@@ -1,0 +1,30 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* replace text interface field#5734 with this content */
+	function changeTab(whichone) {
+		$('a[href*="StudentAdmin.Application"]').attr('href', function(i, href) {
+			return href.replace("Tab=", "") + '&Tab=' + whichone;
+		});
+	}
+</script>
+<div>
+	Application tab to open: 
+	<select onchange="changeTab(this.options[this.selectedIndex].value)" id="customtab" name="customtab">
+		<option selected="selected" value="Overview">
+		Overview
+		</option>
+		<option value="Questionnaires">
+		Questionnaires
+		</option>
+		<option value="Materials">
+		Materials
+		</option>
+		<option value="Status">
+		Status
+		</option>
+		<option value="Comments">
+		Comments
+		</option>
+	</select>
+</div>
+Group your results by:

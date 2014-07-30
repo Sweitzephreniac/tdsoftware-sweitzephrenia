@@ -1,0 +1,7 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append this script to text interface field#2021 to replace options with distinct FSC entries */
+	$(document).ready(function(){
+		$('select[name*="FSC_STATE"]').parent().replaceWith('<select id="selFSCCode" class="percent100" size="10" name="FSC_Code"><option value="002954">UNIV OF NORTH CAROLINA AT PEMBROKE (PEMBROKE )</option><option value="002976">UNIVERSITY OF N C - GREENSBORO (GREENSBORO )</option><option value="002974">UNIVERSITY OF N C-CHAPEL HILL (CHAPEL HILL )</option><option value="002984">UNIVERSITY OF N C-WILMINGTON (WILMINGTON )</option><option value="002907">UNIVERSITY OF NC AT ASHEVILLE (ASHEVILLE )</option><option value="002975">UNIVERSITY OF NC AT CHARLOTTE (CHARLOTTE )</option><option value="G02907">UNIVERSITY OF NC-ASHEVILLE (ASHEVILLE )</option></select>');
+	});
+</script>

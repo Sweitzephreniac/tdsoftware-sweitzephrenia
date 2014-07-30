@@ -1,0 +1,17 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append this to text interface field#4734 */
+	$(document).ready(function(){
+		$("#taComments").parent().append('<input id="detach" type="button" value="Detach Comments">');
+		$("#detach").click(function() {
+			var state = $("#detach").attr('value');
+			if (state=="Detach Comments") {
+				$("#taComments").parent().css({'position' : 'fixed', 'bottom' : '20px', 'width' : '60%', 'background-color' : 'white', 'z-index' : '1', 'box-shadow' : '5px 5px 10px rgb(145, 145, 145)'});
+				$("#detach").attr('value', 'Re-fix Comments');
+			} else {
+				$("#taComments").parent().removeAttr('style');
+				$("#detach").attr('value', 'Detach Comments');
+			};
+		});
+	});
+</script>

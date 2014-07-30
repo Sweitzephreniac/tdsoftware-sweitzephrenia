@@ -1,0 +1,9 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append this script to text interface# 173 (Recommendation request tips text) */
+	$(document).ready(function(){
+		if (document.URL.indexOf("First=1")>0) {
+			$('.H5b:contains("Option 2")').parent().parent().parent().parent().remove();
+		}
+	});
+</script>

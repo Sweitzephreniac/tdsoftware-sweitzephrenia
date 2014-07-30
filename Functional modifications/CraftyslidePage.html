@@ -1,0 +1,105 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/*
+	* Craftyslide
+	* Created by: Abid Din - http://craftedpixelz.co.uk
+	* Version: 1.0
+	* Copyright: Crafted Pixelz
+	* License: MIT license
+	* Updated: 7th June 2011
+	*/
+
+	(function($){$.fn.craftyslide=function(options){var defaults={"width":600,"height":300,"pagination":true,"fadetime":350,"delay":5000};var options=$.extend(defaults,options);return this.each(function(){var $this=$(this);var $slides=$this.find("ul li");$slides.not(':first').hide();function paginate(){$this.append("<ol id='pagination' />");var i=1;$slides.each(function(){$(this).attr("id","slide"+i);$("#pagination").append("<li><a href='#slide"+i+"'>"+i+"</a></li>");i++;});$("#pagination li a:first").addClass("active");}function captions(){$slides.each(function(){$caption=$(this).find("img").attr("title");if($caption!==undefined){$(this).prepend("<p class='caption'>"+$caption+"</p>");}$slides.filter(":first").find(".caption").css("bottom",0);});}function manual(){var $pagination=$("#pagination li a");$pagination.click(function(e){e.preventDefault();var $current=$(this.hash);if($current.is(":hidden")){$slides.fadeOut(options.fadetime);$current.fadeIn(options.fadetime);$pagination.removeClass("active");$(this).addClass("active");$(".caption").css("bottom","-37px");$current.find(".caption").delay(300).animate({bottom:0},300);}});}function auto(){setInterval(function(){$slides.filter(":first-child").fadeOut(options.fadetime).next("li").fadeIn(options.fadetime).end().appendTo("#slideshow ul");$slides.each(function(){if($slides.is(":visible")){$(".caption").css("bottom","-37px");$(this).find(".caption").delay(300).animate({bottom:0},300);}});},options.delay);}$this.width(options.width);$this.find("ul, li img").width(options.width);$this.height(options.height);$this.find("ul, li").height(options.height);if(options.pagination===true){paginate();}else{auto();}captions();manual();});};})(jQuery);
+	</script>
+	<style>
+	/*
+
+	Craftyslide CSS Styles
+
+	*/
+
+	#slideshow {
+		margin:0;
+		padding:0;
+		position:relative;
+		border:15px solid #f8f8f8;
+		-webkit-box-shadow:0 3px 5px #999;
+		-moz-box-shadow:0 3px 5px #999;
+		box-shadow:0 3px 5px #999;
+	}
+
+	#slideshow ul {
+		position:relative;
+		overflow:hidden;
+		margin:0;
+		padding:0;
+	}
+
+	#slideshow ul li {
+		position:absolute;
+		top:0;
+		left:0;
+		margin:0;
+		padding:0;
+		list-style:none;
+	}
+
+	#pagination {
+		clear:both;
+		width:75px;
+		margin:25px auto 0;
+		padding:0;
+	}
+
+	#pagination li {
+		list-style:none;
+		float:left;
+		margin:0 2px;
+	}
+
+	#pagination li a {
+		display:block;
+		width:10px;
+		height:10px;
+	}
+
+	#pagination li a.active {
+		background-position:0 10px;
+	}
+
+	.caption {
+		width:100%;
+		margin:0;
+		padding:10px;
+		position:absolute;
+		left:0;
+		font-family:Helvetica, Arial, sans-serif;
+		font-size:14px;
+		font-weight:lighter;
+		color:#fff;
+		border-top:1px solid #000;
+		background:rgba(0,0,0,0.6);
+	}
+</style>
+<div id="slideshow">
+	<ul>
+		<li>
+			<img src="image1.jpg" title="Lorem ipsum dolor sit amet" />
+		</li>
+		<li>
+			<img src="image2.jpg" title="Lorem ipsum dolor sit amet" />
+		</li>
+		<li>
+			<img src="image3.jpg" title="Lorem ipsum dolor sit amet" />
+		</li>
+	</ul>
+</div>
+<script>
+	$("#slideshow").craftyslide({
+		'width': 500,
+		'height': 500,
+		'pagination': false,
+		'fadetime': 500,
+		'delay': 2500
+	});
+</script>

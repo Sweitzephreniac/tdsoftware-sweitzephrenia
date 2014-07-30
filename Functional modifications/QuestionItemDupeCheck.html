@@ -1,0 +1,23 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append to text interface field #259 */
+	$(document).ready(function(){
+		var qstnrArray = new Array("1","2","3"); /* These questionnaire IDs are checked */
+		for (var i=0; i<qstnrArray.length; i++) {
+			var fieldName = 'ApplicationResponseIDs_' + qstnrArray[i];
+			if ($("input[name="+fieldName+"]").length == 1) {
+				$("select[name^='response_']").change(function() {
+					var selval = this.options[this.selectedIndex].value;
+					var allvals = new Array();
+					$("select[name^='response_']").each(function() {
+						allvals.push(this.options[this.selectedIndex].value);
+					});
+					if (allvals.indexOf(selval) != allvals.lastIndexOf(selval)) {
+						alert("You have already selected that option. Please choose another.");
+						this.selectedIndex = 0;
+					}
+				});
+			}
+		}
+	});
+</script>

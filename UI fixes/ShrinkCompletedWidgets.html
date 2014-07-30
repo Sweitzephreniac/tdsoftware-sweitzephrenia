@@ -1,0 +1,20 @@
+<!-- Tested in TDS 14.0 -->
+<!-- append to text interface field#57 -->
+<style type="text/css">
+	.hidden-widget {
+		display: none;
+	}
+</style>
+<script>
+	$(document).ready(function(){
+		var checklist = new Array("Material Submissions","Signature Documents","Application Questionnaire(s)","Learning Content","Assessments");
+		for (var i = 0; i < checklist.length; i++) {
+			if ($('h2:contains("' + checklist[i] + '")').parent().parent().parent().parent().next().find('div.ico_unchecked').length == 0) {
+				$('h2:contains("' + checklist[i] + '")').text(checklist[i] + ' (all completed)').parent().parent().parent().parent().next().addClass('hidden-widget');
+				$('h2:contains("' + checklist[i] + '")').parent().parent().parent().parent().click(function (){
+					$(this).next().toggleClass('hidden-widget');
+				});
+			}
+		}
+	});
+</script>

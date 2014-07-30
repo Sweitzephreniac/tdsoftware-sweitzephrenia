@@ -1,0 +1,11 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* append this script to text interface field#3 (program brochure page tips) */
+	$(document).ready(function(){
+		$("th:contains('Decision Date')").parent().parent().parent().addClass("dateMatrix");
+		$("th:contains('Decision Date')").remove();
+		$(".dateMatrix tr:has(td.bot-bdr)").each(function( index ) {
+			$(this).children("td").first().next().next().next().remove();
+		});
+	});
+</script>

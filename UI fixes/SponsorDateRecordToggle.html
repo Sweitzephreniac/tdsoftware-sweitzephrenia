@@ -1,0 +1,20 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* replace interface field#4444 with this script */
+	$(document).ready(function(){
+		$(".data-container:contains('Sponsor\'s Date Records')").attr("id","sponsor-div").hide().append('<p>(Use these dates to schedule your office\'s deadlines in accordance with the program sponsor\'s and post program start/end dates)</p>').before('<div></div>').after('<input id="record-toggle" class="Button" type="button" value="Show Sponsor Date Records">');
+		$("#record-toggle").click(function() {
+			toggleRecords();
+		});
+	});
+	function toggleRecords() {
+		var currentState = $("#record-toggle").val();
+		if (currentState=="Show Sponsor Date Records") {
+			$("#sponsor-div").show();
+			$("#record-toggle").val("Hide Sponsor Date Records");
+		} else {
+			$("#sponsor-div").hide();
+			$("#record-toggle").val("Show Sponsor Date Records");
+		}
+	}
+</script>

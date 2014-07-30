@@ -1,0 +1,33 @@
+<!-- Tested in TDS 14.0 -->
+<p>Click headings to expand/collapse</p>
+<div class="header" style="background-color:grey;">
+	<h1>General Information</h1>
+</div>
+<div style="display:block;">
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque malesuada justo non dolor tincidunt a mollis tortor congue. Mauris ut mauris sollicitudin nisi congue varius. Nam at lacus vel lacus bibendum hendrerit sed nec ipsum. Duis scelerisque augue et urna lobortis nec tincidunt justo auctor. Aenean porttitor cursus dolor, ac fermentum est ullamcorper sit amet.</p>
+</div>
+<div class="header" style="background-color:grey;">
+	<h1>Course Information</h1>
+</div>
+<div style="display:block;">
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque malesuada justo non dolor tincidunt a mollis tortor congue. Mauris ut mauris sollicitudin nisi congue varius. Nam at lacus vel lacus bibendum hendrerit sed nec ipsum. Duis scelerisque augue et urna lobortis nec tincidunt justo auctor. Aenean porttitor cursus dolor, ac fermentum est ullamcorper sit amet.</p>
+</div>
+<div class="header" style="background-color:grey;">
+	<h1>Accommodations</h1>
+</div>
+<div style="display:block;">
+	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque malesuada justo non dolor tincidunt a mollis tortor congue. Mauris ut mauris sollicitudin nisi congue varius. Nam at lacus vel lacus bibendum hendrerit sed nec ipsum. Duis scelerisque augue et urna lobortis nec tincidunt justo auctor. Aenean porttitor cursus dolor, ac fermentum est ullamcorper sit amet.</p>
+</div>
+<script language="JavaScript" type="text/javascript">
+	$(document).ready(function(){
+		$(".header").next().css("display","none");
+		$(".header").first().next().css("display","block");
+	});
+	$(".header").click(function() {
+		var position = $(this).next().css('display');
+		if (position == 'block') {
+			$(this).next().css("display","none"); }
+		else
+			{ $(this).next().css("display","block"); }
+	});
+</script>

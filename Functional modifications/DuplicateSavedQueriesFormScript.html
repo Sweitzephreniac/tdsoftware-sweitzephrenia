@@ -1,0 +1,11 @@
+<!-- Tested in TDS 14.0 -->
+<!-- This needs to be added to add the query form pages for profile and application searches (Field#s 12492, 8566, 8567, 13817) -->
+<script>
+	$(document).ready(function(){
+		// check to see if there is a URL parameter for duplication
+		if (location.href.match(/&Dupe\=/i)) {
+			// if yes, then null the ID to make this a new query
+			$('input[name="iqueryid"]').val('');
+		}
+	});
+</script>

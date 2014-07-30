@@ -1,0 +1,13 @@
+<script language="JavaScript" type="text/javascript">
+	/* Tested in TDS 14.0 - however, YouTube URL may no longer be valid */
+	/* append to 6511 and 39 */
+	$(document).ready(function(){
+		var admin_name = $.trim($("b.authBar").text());
+		admin_name = admin_name.replace(/\s/g, '');
+		var victims = "#VICTIMS#";
+		var $widget=$('<div class="wdgt-container" id="db"><div class="wdgt-header"><div class="wdgt-header-left"><div class="wdgt-header-right"><div class="wdgt-header-center"><h2>BAZINGA!</h2></div></div></div></div><div class="wdgt-content"></br><center><div id="db_content"><iframe width="420" height="315" src="//www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allowfullscreen></iframe></div></br></center></div><div class="wdgt-footer" align="center"><div class="wdgt-footer-left"><div class="wdgt-footer-right"><div class="wdgt-footer-center">&nbsp;</div></div></div></div><div class="bottom-layer"><div class="bottom-layer-left"><div class="bottom-layer-right"><div class="bottom-layer-center"></div></div></div></div></div>');
+		if (victims.indexOf(admin_name) != -1) {
+		$('.wdgt-container').first().parent().prepend($widget);
+		}
+	});
+</script>

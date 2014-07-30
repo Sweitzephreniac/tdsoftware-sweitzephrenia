@@ -1,0 +1,33 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* add this script to the admin home page tips text (interface field#6511) */
+	$(document).ready(function(){
+		var reportid = #REPORT_ID OF THE PROFILE REPORT#;
+		var reportdoc = #FILE_ID OF THE PROFILE REPORT DOC CENTER OBJECT#;
+		// check the page for the report - if it's there, get all profile searches
+		if ($('a[href$="Report_ID=' + reportid + '"]').length > 0) {
+			var opcheck = '';
+			var ddhtml = '</div><div><table cellpadding="1" cellspacing="0" width="100%" border="0" ><tbody><tr><td class="wdgt-heading-bg white-font pad-left-12 fbold fnt-108 report-query-line" scope="colgroup">Paginated Profile Export</td></tr><tr><td width="1%" nowrap="nowrap" class="pad-left-12"><select id="selProRep" onchange="runProfileReport(\'' + reportdoc + '\',\'' + reportid + '\');"><option value="">Select profile query</option>';
+			$('div[title="Saved Profile Search"]').next().each(function (){
+				var splitprofileurl = $(this).attr('href').split("=");
+				ddhtml = ddhtml + '<option value="' + splitprofileurl[2] + '">' + $(this).text() + '</option>';
+				opcheck = 1;
+			});
+			ddhtml = ddhtml + '</select><a target="_blank" id="profileexporticon"><div class="sprites_icons ico_new-window-new absmiddle noborder"  alt="Export Profiles"></div></a></td></tr></tbody></table></div>';
+			// if there were profile search queries, then the drop-down menu can be built
+			if (opcheck != '') {
+				$('form[name="QandR"]').after(ddhtml);
+				$('#profileexporticon').click(function() {alert("Select a profile query first.");});
+			}
+		}
+	});
+	function runProfileReport(reportdoc, reportid) {
+		// build and assign the proper URL to the icon
+		if ($("#selProRep  option:selected").val() != '') {
+			var url = "_customtags/ct_FileRetrieve.cfm?File_ID=" + reportdoc + "&QueryID=" + $("#selProRep  option:selected").val() + "&ReportID=" + reportid;
+			$('#profileexporticon').attr('href',url).unbind('click');
+		} else {
+			$('#profileexporticon').removeAttr('href').click(function() {alert("Select a profile query first.");});
+		}
+	}
+</script>

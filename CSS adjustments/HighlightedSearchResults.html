@@ -1,0 +1,30 @@
+<!-- Tested in TDS 14.0 -->
+<!-- append this to text interface fields# 5682, 13818 and 6508 -->
+<style type="text/css">
+	.custom-hover-actions{
+		transition: background-color .175s;
+	}
+	.bg-hover-color {
+		background-color: #A7FF76 !important;
+	}
+</style>
+<script>
+	$(document).ready(function(){
+		$('.data-table tbody tr').each(function() {
+			$(this).find('td').addClass('custom-hover-actions').hover( function() {
+				$(this).parent().find('td').addClass('bg-hover-color');
+			}, function() {
+				$(this).parent().find('td').removeClass('bg-hover-color');
+			});
+			$(this).click( function(event) {
+				if (event.target.tagName == 'A') {return;}
+				var desturl = $(this).find('a').attr('href');
+				if (event.metaKey || event.shiftKey) {
+					window.open(desturl,'_blank');
+				} else {
+					window.open(desturl,'_self');
+				}
+			});
+		});
+	});
+</script>

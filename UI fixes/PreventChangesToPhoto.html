@@ -1,0 +1,10 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* Add this to text interface field# 13693 */
+	$(document).ready(function(){
+		var n = $('span a:contains("Click to delete image")').length;
+		if (n>0) {
+			$('span a:contains("Click to delete image")').parent().parent().remove();
+		}
+	});
+</script>

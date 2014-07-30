@@ -1,0 +1,21 @@
+<script>
+	/* Tested in TDS14.0 */
+	/* Append this script to tips text of pages for alerts */
+	$(document).ready(function(){
+		var doccenterid = {DOCUMENT CENTER ID#};
+		$("#sa_content").prepend('<div id="alert-panels" style="display: none;"></div>');
+		$("#alert-panels").load('index.cfm?FuseAction=PublicDocuments.View&amp;File_ID=' + doccenterid + ' #messages', function() {
+			$(".panel-header").css('display','none');
+			$(".custom-panel").css('display','none');
+			var panelflag = 0;
+			$(".custom-panel").each(function () {
+				var panelcontent = $(this).find(".alert-content").text().trim();
+				if (panelcontent != 'no message') {
+					$(this).css('display','block');
+					panelflag = 1;
+				}
+			});
+			if (panelflag > 0) { $('#alert-panels').css('display','block'); }
+		});
+	});
+</script>
