@@ -89,6 +89,9 @@ If there are some administrative tools that you always use and would like to alw
 > [I HEARD YOU LIKE TABS](http://sweitzephrenia.com/articles/2013/1/22/i-heard-you-like-tabs)
 
 ### AddWYSObjectToBrochures.html
+If you want to have some text that appears on all your brochure pages and is managed through a single document, look no further. Here is the way to implement it on your site using a few lines of javascript.
+
+> [BOILERPLATE CENTER](http://sweitzephrenia.com/articles/2012/12/1/boilerplate-center)
 
 ### AdminHomeDashboard.html
 This is a pretty wild bit of javascript that can be used to add a new widget to your administrative home page that displays a simplified report that is updated on a daily basis.
