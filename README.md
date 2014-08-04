@@ -301,6 +301,11 @@ If you have a rolling admissions acceptance process for all your programs, you r
 
 > [DECISION DATE? DECISION DON'T!](http://sweitzephrenia.com/articles/2012/12/29/decision-date-decision-dont)
 
+### RemoveRankingFields.html
+So Terra Dotta got some feedback about the way that the 'Ranking' for outgoing programs is auto-enabled when you upgrade to TDS14, but do you really want yet another program-level setting that you have to go manipulate program by program? How about a script that not only hides the ranking interface on the applicant home page, but also corrects that awkward padding on the left side of the 'Applications' panel?
+
+> [RANKLED BY RANKING](https://stephen-sweitzer.squarespace.com/articles/2014/7/14/rankled-by-ranking)
+
 ### RemovingCityFromAdvProgSearch.html *(file 1 of 2)*
 Is your program catalog not one where a 'city' search makes sense? You can remove the option for searching your program catalog based on the city of the programs with these scripts.
 
