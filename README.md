@@ -291,6 +291,11 @@ If you have a lot of process elements on your site, going through the listings i
 
 > [PROCESS MANAGEMENT MANAGEMENT (PMM)](http://sweitzephrenia.com/articles/2014/5/1/process-management-management-pmm)
 
+### ProgramDatesToggle.html
+If you've been using the software for a few years, something you might have noticed is that the 'Dates' tab of the program builder can get a bit cluttered. Here is a script you can embed on that page that will help manage the length of that table so that you aren't having to scroll past data that's a few years old.
+
+> [RECORD-BREAKING NUMBERS OF DATE RECORDS](http://sweitzephrenia.com/articles/2014/6/23/record-breaking-numbers-of-date-records)
+
 ### QuestionItemFieldMask.html
 If you have data field questions in your questionnaires that you would really like to implement a fixed format of data entry, you might be able to get it done with this little bit of javascript in the question item instructions.
 
