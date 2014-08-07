@@ -81,7 +81,7 @@
 
 <!-- Script that sets up the interface and performs the searches -->
 
-<script language="JavaScript" type="text/javascript">
+<script>
 
 	//
 	// INITIALIZATION ROUTINES
@@ -178,7 +178,7 @@
 			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="urlparam" value="' + data.DISPLAY_NAME + '=">');
 		} else {
 		
-			// The criteria is a program parameter so we add the extern hidden field that identifies the parameter's type, and the URL parameter is the 
+			// The criteria is a program parameter so we add the external hidden field that identifies the parameter's type, and the URL parameter is the FORM_NAME of that parameter
 			
 			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="urlparam" value="' + data.FORM_NAME + '=">');
 			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="pparamtype" value="' + apiparam + '_t=' + data.PARAM_TYPE + '">');
@@ -191,8 +191,12 @@
 		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option or found in the exclude lists.
 		
 		for (var paramoption in data.OPTIONS.OPTION) {
-			if ((data.OPTIONS.OPTION[paramoption].NAME != "Any") && (!(data.OPTIONS.OPTION[paramoption].NAME in excludeObject)))
-			{$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + data.OPTIONS.OPTION[paramoption].NAME.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + data.OPTIONS.OPTION[paramoption].NAME + '</label><br>');}
+			var optionname = data.OPTIONS.OPTION[paramoption].NAME
+			if (typeof optionname != "string") {
+				optionname = optionname.toString();
+			}
+			if ((optionname != "Any") && (!(optionname in excludeObject)))
+			{$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + optionname.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + optionname + '</label><br>');}
 		}
 	}
 	
@@ -239,7 +243,7 @@
 		
 		// After checking all the criteria widgets, if there were any checkboxes marked, we want to run the program search by calling the 'updateResults' function.
 		
-		if (changed = 1) { updateResults(); }
+		if (changed == 1) { updateResults(); }
 	}
 
 	// This helper function extracts a specific cookie key's value from the user's browser.
