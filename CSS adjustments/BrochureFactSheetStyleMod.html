@@ -3,25 +3,34 @@
 		/* Testing in TDS 14.0 */
 		/* Add to text interface field# 3 */
 		var factsheet = parseFactSheet();
+		var glosslinks = parseGlossLinks();
 		redrawFactSheet(factsheet);
+		addGlossLinks(glosslinks);
 	});
 	function parseFactSheet() {
-		// this function parses the fact sheet's data and returns it as an array
 		var paramInformation = new Array();
 		$('th.fnt-88:contains("Fact Sheet:")').parent().parent().parent().parent().parent().next().find('tr').each(function() { 
 			var rowData = new Array();
 			$(this).find('td').each(function() {
 				rowData.push($(this).text().trim());
 			});
-			paramInformation.push([$.trim(rowData[0]),$.trim(rowData[1])]);
+			paramInformation.push([rowData[0],rowData[1]]);
 			if (rowData.length > 2) {
-				paramInformation.push([$.trim(rowData[2]),$.trim(rowData[3])]);
+				paramInformation.push([rowData[2],rowData[3]]);
 			}
 		});
 		return paramInformation;
 	}
+	function parseGlossLinks() {
+		var paramGlosslinks = new Array();
+		$('a[href*="openGlossary"]').each(function() {
+			if ($(this).text() != "") {
+				paramGlosslinks.push([$(this).attr('href'),$(this).text().trim()]);
+			}
+		});
+		return paramGlosslinks;
+	}
 	function redrawFactSheet(factsheet) {
-		// this function erases and redraws the contents of the 'Fact Sheet' section with new styles
 		$('th.fnt-88:contains("Fact Sheet:")').parent().parent().parent().parent().parent().next().after('<div id="custom-fact-sheet" class="left-bdr rightbdr padding overflow"></div>').remove();
 		for (var i = 0; i < factsheet.length; i++) {
 			var paramname = factsheet[i][0];
@@ -29,9 +38,17 @@
 			$('#custom-fact-sheet').append('<div class="cfs-parameter"><div class="cfs-param-name">' + paramname + '</div><div class="cfs-param-value">' + paramvalue + '</div></div>');
 		}
 	}
+	function addGlossLinks(glosslinks) {
+		$('.cfs-param-name').each(function() {
+			for (var i = 0; i < glosslinks.length; i++) {
+				if ((glosslinks[i][1]+":") == $(this).text()) {
+					$(this).text(':').prepend('<a class="cfs-glosslink" href="' + glosslinks[i][0] + '" title="Click here for a definition of this term" class="menulink">' + glosslinks[i][1] + '</a>')
+				}
+			}
+		});
+	}
 </script>
 <style>
-	/* CSS for the redrawn fact sheet */
 	#custom-fact-sheet {
 		padding: 10px;
 	}
@@ -45,5 +62,8 @@
 	}
 	#custom-fact-sheet .cfs-param-value {
 		padding-left: 5px;
+	}
+	#custom-fact-sheet .cfs-glosslink {
+		color: blue;
 	}
 </style>
