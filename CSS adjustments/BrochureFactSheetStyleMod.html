@@ -1,7 +1,7 @@
 <script>
 	$(document).ready(function () {
 		/* Testing in TDS 14.0 */
-		/* Add to text interface field# ???? */
+		/* Add to text interface field# 3 */
 		var factsheet = parseFactSheet();
 		redrawFactSheet(factsheet);
 	});
@@ -22,6 +22,12 @@
 	}
 	function redrawFactSheet(factsheet) {
 		// this function erases and redraws the contents of the 'Fact Sheet' section with new styles
+		$('th.fnt-88:contains("Fact Sheet:")').parent().parent().parent().parent().parent().next().after('<div id="custom-fact-sheet" class="left-bdr rightbdr padding overflow" style="padding: 0px 5px 5px;"></div>').remove();
+		for (var i = 0; i < factsheet.length; i++) {
+			var paramname = factsheet[i][0];
+			var paramvalue = factsheet[i][1];
+			$('#custom-fact-sheet').append('<div class="cfs-parameter"><div class="cfs-param-name">' + paramname + '</div><div class="cfs-param-value">' + paramvalue + '</div></div>');
+		}
 	}
 </script>
 <style>
