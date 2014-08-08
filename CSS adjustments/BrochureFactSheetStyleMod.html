@@ -22,7 +22,7 @@
 	}
 	function redrawFactSheet(factsheet) {
 		// this function erases and redraws the contents of the 'Fact Sheet' section with new styles
-		$('th.fnt-88:contains("Fact Sheet:")').parent().parent().parent().parent().parent().next().after('<div id="custom-fact-sheet" class="left-bdr rightbdr padding overflow" style="padding: 0px 5px 5px;"></div>').remove();
+		$('th.fnt-88:contains("Fact Sheet:")').parent().parent().parent().parent().parent().next().after('<div id="custom-fact-sheet" class="left-bdr rightbdr padding overflow"></div>').remove();
 		for (var i = 0; i < factsheet.length; i++) {
 			var paramname = factsheet[i][0];
 			var paramvalue = factsheet[i][1];
@@ -32,4 +32,18 @@
 </script>
 <style>
 	/* CSS for the redrawn fact sheet */
+	#custom-fact-sheet {
+		padding: 10px;
+	}
+	#custom-fact-sheet .cfs-parameter {
+		float: left;
+		width: 50%;
+		padding-bottom: 15px;
+	}
+	#custom-fact-sheet .cfs-param-name {
+		text-decoration: underline;
+	}
+	#custom-fact-sheet .cfs-param-value {
+		padding-left: 5px;
+	}
 </style>
