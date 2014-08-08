@@ -7,6 +7,18 @@
 	});
 	function parseFactSheet() {
 		// this function parses the fact sheet's data and returns it as an array
+		var paramInformation = new Array();
+		$('th.fnt-88:contains("Fact Sheet:")').parent().parent().parent().parent().parent().next().find('tr').each(function() { 
+			var rowData = new Array();
+			$(this).find('td').each(function() {
+				rowData.push($(this).text().trim());
+			});
+			paramInformation.push([$.trim(rowData[0]),$.trim(rowData[1])]);
+			if (rowData.length > 2) {
+				paramInformation.push([$.trim(rowData[2]),$.trim(rowData[3])]);
+			}
+		});
+		return paramInformation;
 	}
 	function redrawFactSheet(factsheet) {
 		// this function erases and redraws the contents of the 'Fact Sheet' section with new styles
