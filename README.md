@@ -203,6 +203,16 @@ If you want to have a quick reference hardcopy of a bunch of profiles, you can r
 
 > [PRINTING A PLETHORA OF PRETTY PROFILES](http://sweitzephrenia.com/articles/2013/9/30/printing-a-plethora-of-pretty-profiles)
 
+### ProcessDueDatesAppPageScript.html *(file 1 of 2)*
+If you've got process elements in your application process that have due dates that don't fit the natural four-phase schedule of Terra Dotta software, this is a bit scripting magic that can create due dates for process elements on the application pages.
+
+> [DOOBY-DOOBY DUE DATES](http://sweitzephrenia.com/articles/2014/8/4/dooby-dooby-due-dates)
+
+### ProcessDueDatesInstructionsTemplate.html *(file 2 of 2)*
+If you've got process elements in your application process that have due dates that don't fit the natural four-phase schedule of Terra Dotta software, this is a bit scripting magic that can create due dates for process elements on the application pages.
+
+> [DOOBY-DOOBY DUE DATES](http://sweitzephrenia.com/articles/2014/8/4/dooby-dooby-due-dates)
+
 ### QuestionItemDefaultOption.html
 For a single-select type question item, sometimes it can be useful to have an option automatically selected for the applicant and instructions indicating that they can change the selected option when it is necessary. This simple jQuery script embedded in the question item's instructions can make that happen.
 
