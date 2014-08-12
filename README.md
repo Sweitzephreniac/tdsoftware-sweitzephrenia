@@ -163,7 +163,7 @@ Sometimes, you need to have a way of displaying a warning or alert about some ev
 
 > [ALERTS, WARNINGS, AND OTHER WAYS TO ATTRACT ATTENTION](http://sweitzephrenia.com/articles/2014/2/27/alerts-warnings-and-other-ways-to-attract-attention)
 
-## DailyPhotoCheck.html
+### DailyPhotoCheck.html
 If your office really wants to have students submit a profile image, you can put a quick javascript check on the applicant home page that will prompt the user to upload a photo. Soon, you'll have everyone's lovely face appearing in the application admin headers.
 
 > [PROFILE PICS PLEEZ](http://sweitzephrenia.com/articles/2014/1/27/profile-pics-pleez)
