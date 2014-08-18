@@ -1,12 +1,22 @@
 <script>
 	/* Tested in TDS 14.0 */
-	/* Add to text interface field # ???? */
+	/* Add to text interface field # 5066 */
 	$(document).ready(function () {
-		// get the program name from the document title
-		// run the API call to get the program's ID# based on the program name
+		var pagehref = document.location.href.split('index.cfm');
+		var appinfo = document.title.split('-');
+		var progname = appinfo[1].trim().replace(/ /g,"+");
+		var searchurl = pagehref[0] + 'api/index.cfm?callName=getProgramSearchResults&ProgramName=%22' + progname + '%22';
+		$.getJSON(searchurl + "&ResponseEncoding=json&callBackName=getProgramID&jsoncallback=?");
 	});
-	function cb_getProgramID(data) {
-		// extract the program ID# from the data
-		// create the link to the program brochure page
+	function _cb_getProgramID(data) {
+		var progid = 0;
+		if (data.ROWCOUNT > 1) {
+			progid = data.PROGRAM[1].PROGRAM_ID;
+		} else {
+			progid = data.PROGRAM.PROGRAM_ID;
+		}
+		if (progid != 0) {
+			$('#header-tabs-container ul').append('<li><span class="tab-corner-left"></span><a class="tablinks header-tabs-container" target="_blank" title="Brochure Page" href="index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + progid + '">Brochure Page</a><span class="tab-corner-right"></span></li>');
+		}
 	}
 </script>
