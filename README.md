@@ -370,9 +370,9 @@ While this isn't going to look like something you want to have on your site, the
 > [MY OWN PRIVATE BROCHURE PAGE](http://sweitzephrenia.com/articles/2014/4/6/my-own-private-brochure-page)
 
 ### DynamicProgramSearch.html
-This is an API driven program search that creates a dynamically adjusting list of program search results based on checkboxes getting marked. It uses the Google Maps API to create pins on a world map showing where there are programs that meet the criteria. It also uses a browser cookie to retain the user's last search so that it can be recreated when the user returns to the program search page.
+This is an API driven program search that creates a dynamically adjusting list of program search results based on checkboxes getting marked. It uses the Google Maps API to create pins on a world map showing where there are programs that meet the criteria. It also uses a browser cookie to retain the user's last search so that it can be recreated when the user returns to the program search page. UPDATE: It will now support program parameters as search criteria with just a couple adjustments.
 
-> [FIGHTING WITH AN AWESOME PROGRAM SEARCH](http://sweitzephrenia.com/articles/2014/1/4/fighting-with-an-awesome-program-search)
+> [Leveling-up the API-driven Program Search](http://sweitzephrenia.com/articles/2014/8/4/leveling-up-the-api-driven-program-search)
 
 ### MobileProgramSearch.html
 Here's how to use the Terra Dotta Software public API to implement a mobile-optimized program search on your site. Trust me, this can be done in less than five minutes.

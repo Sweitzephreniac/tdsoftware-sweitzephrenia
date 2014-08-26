@@ -81,7 +81,7 @@
 
 <!-- Script that sets up the interface and performs the searches -->
 
-<script language="JavaScript" type="text/javascript">
+<script>
 
 	//
 	// INITIALIZATION ROUTINES
@@ -173,31 +173,30 @@
 		var apiparam = data.FORM_NAME;
 		if (apiparam.substring(0,2) != "p_") {
 		
-			// The criteria isn't a program parameter so the API parameter is just the display name (term or region)
-		
-			apiparam = data.DISPLAY_NAME;
+			// The criteria isn't a program parameter so the API parameter is just the display name (term or region). This line adds the hidden field that has the full API parameter that is used. 
+			
+			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="urlparam" value="' + data.DISPLAY_NAME + '=">');
 		} else {
 		
-			// The criteria is a program parameter so we add the extern hidden field that identifies the parameter's type and we leave the API parameter alone because it is already correct.
-		
+			// The criteria is a program parameter so we add the external hidden field that identifies the parameter's type, and the URL parameter is the FORM_NAME of that parameter
+			
+			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="urlparam" value="' + data.FORM_NAME + '=">');
 			$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="pparamtype" value="' + apiparam + '_t=' + data.PARAM_TYPE + '">');
 		}
-		
-		// This line adds the hidden field that has the full API parameter that is used. It currently is not correct for program parameters. It will only support the term and region search criteria at this time.
-		
-		$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="hidden" name="urlparam" value="&' + apiparam + '=">');
-		
-		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option.
 		
 		// Add names of parameters you wish to not show up to the list below, inside quotation marks, and separated by a comma, e.g. ["Proposal", "Other", "Fall-Winter Terms", "Summer-Fall Terms"]
 		var excludeTheseParamsArray = []
 		var excludeObject = oc(excludeTheseParamsArray);
 		
-		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option.
+		// This loop enumerates through all the options in the provided API data and adds a checkbox in the widget as long as it isn't the 'Any' option or found in the exclude lists.
 		
 		for (var paramoption in data.OPTIONS.OPTION) {
-			if ((data.OPTIONS.OPTION[paramoption].NAME != "Any") && (!(data.OPTIONS.OPTION[paramoption].NAME in excludeObject)))
-			{$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + data.OPTIONS.OPTION[paramoption].NAME.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + data.OPTIONS.OPTION[paramoption].NAME + '</label><br>');}
+			var optionname = data.OPTIONS.OPTION[paramoption].NAME
+			if (typeof optionname != "string") {
+				optionname = optionname.toString();
+			}
+			if ((optionname != "Any") && (!(optionname in excludeObject)))
+			{$("#progsearch-interface-container #" + data.FORM_NAME + "-options").append('<input type="checkbox" id="' + data.FORM_NAME + paramoption + '" value="' + optionname.replace(/ /g,"+") + '"><label for="' + data.FORM_NAME + paramoption + '">' + optionname + '</label><br>');}
 		}
 	}
 	
@@ -244,7 +243,7 @@
 		
 		// After checking all the criteria widgets, if there were any checkboxes marked, we want to run the program search by calling the 'updateResults' function.
 		
-		if (changed = 1) { updateResults(); }
+		if (changed == 1) { updateResults(); }
 	}
 
 	// This helper function extracts a specific cookie key's value from the user's browser.
@@ -268,9 +267,10 @@
 
 	function updateResults(){
 	
-		// The function starts by setting the base URL needed for the API call.
+		// The function starts by creating two empty arrays for holding the URL parameters that will be needed.
 
-		var searchurl = sitedomain + 'api/index.cfm?callName=getProgramSearchResults';
+		var urlparams = new Array();
+		var ppurlparams = new Array();
 		
 		// There are two loops here - the first loops through each set of checkboxes (search criteria)
 		
@@ -293,10 +293,14 @@
 				}
 			});
 			
-			// Now that we've checked all the checkboxes in this set of checkboxes, we see if there were any parameter options that were checked. If there were, we're going to add that to the URL needed for the API call.
+			// Now that we've checked all the checkboxes in this set of checkboxes, we see if there were any parameter options that were checked. If there were, we're going to add that to the proper array for building the API call.
 			
 			if (paramoptions != unchanged) {
-				searchurl = searchurl + paramoptions;
+				if (paramoptions.substring(0,2) != "p_") {
+					urlparams.push(paramoptions);
+				} else {
+					ppurlparams.push(paramoptions + '%7F;' + $(this).find('input[name="pparamtype"]').val());
+				}
 			}
 		});
 		
@@ -304,15 +308,37 @@
 		
 		saveCriteriaCookies();
 
-		// If the variable for storing the URL of the API call has not changed, that means nothing is selected. Hide the search results container and exit the function
+		// If there isn't anything in either of the two arrays, that means nothing is selected. Hide the search results container and exit the function
 
-		if (searchurl == sitedomain + 'api/index.cfm?callName=getProgramSearchResults') {
+		if (urlparams.length == 0 && sitedomain + ppurlparams.length == 0) {
 			$("#progsearch-results-container").css("display","none");
 			$('#map-container').css('display','none');
 			return;
 		}
 
-		// We only get to this line if there is search criteria selected. The script adds the JSON encoding paramater and callback names to the URL of the API call and fire off the AJAX request.
+		// We only get to this part if there is search criteria selected. Now, we're ready to build the URL for the API call.
+		
+		var searchurl = sitedomain + 'api/index.cfm?callName=getProgramSearchResults';
+		
+		// first, iterate through the non-program parameter options (if there are any)
+		
+		if (urlparams.length != 0) {
+			for (var i = 0; i < urlparams.length; i++) {
+				searchurl = searchurl + '&' + urlparams[i];
+			}
+		}
+		
+		// now, iterate through the program parameter options (if there are any)
+		
+		if (ppurlparams.length != 0) {
+			searchurl = searchurl + '&Params=';
+			for (var i = 0; i < ppurlparams.length; i++) {
+				if (i>0) { searchurl = searchurl + ';' }
+				searchurl = searchurl + ppurlparams[i];
+			}
+		}
+		
+		// The script adds the JSON encoding paramater and callback names to the URL of the API call and fire off the AJAX request.
 
 		$.getJSON(searchurl + "&ResponseEncoding=json&callBackName=processResults&jsoncallback=?");
 
