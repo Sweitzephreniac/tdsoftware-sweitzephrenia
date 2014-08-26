@@ -88,7 +88,7 @@
 	//
 	// There are a few parts to initializing the page. First, there are three global variables that are getting set that will be used throughout the functionality. Next, there is the function that gets called when the page is done loading. It will make the API call to fetch the term, region, and parameter criteria information from the site that will be used to build the interface. It also calls the function to load the Google Maps API script that is needed. The third part is that function.
 
-	// These are the global configuration parameters. At this time, the 'searchparameters' option is not supported. Only the terms and regions will display as filter criteria for the program searches
+	// These are the global configuration parameters. The searchparameters should be a comma de-limited list of program parameter ID#s.
 
 	var sitedomain = "//#SITE DOMAIN HERE#/";
 	var searchparameters = "";
