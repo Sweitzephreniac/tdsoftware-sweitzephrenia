@@ -19,6 +19,11 @@ Do you have a few programs or process elements that are 'bolded' because you put
 
 > [BE A BETTER BOLDER](http://sweitzephrenia.com/articles/2014/1/28/be-a-better-bolder)
 
+###BrochureFactSheetStyleMod.html
+The display of program parameters on the public brochure page can sometimes be a bit difficult to massage into an aesthetically-pleasing format. There aren't a lot of settings to mess with, and trying to fix it up with CSS is not easy because of the way that the data is rendered on the page. This script says, "To heck with it all - let's parse the data on the page - nuke and pave!"
+
+> [Fixing a Funky Fact Sheet](http://sweitzephrenia.com/articles/2014/8/6/fixing-a-funky-fact-sheet)
+
 ### HighlightedSearchResults.html
 With just a couple jQuery commands, you can make an application or profile in your search results easier to select. Instead of having to put the mouse pointer directly on the text of the hyperlink, a couple of event handlers can be used to make the entire row the 'clickable region' for that particular profile or application.
 
