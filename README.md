@@ -22,7 +22,7 @@ Do you have a few programs or process elements that are 'bolded' because you put
 ###BrochureFactSheetStyleMod.html
 The display of program parameters on the public brochure page can sometimes be a bit difficult to massage into an aesthetically-pleasing format. There aren't a lot of settings to mess with, and trying to fix it up with CSS is not easy because of the way that the data is rendered on the page. This script says, "To heck with it all - let's parse the data on the page - nuke and pave!"
 
-> [Fixing a Funky Fact Sheet](http://sweitzephrenia.com/articles/2014/8/6/fixing-a-funky-fact-sheet)
+> [FIXING A FUNKY FACT SHEET](http://sweitzephrenia.com/articles/2014/8/6/fixing-a-funky-fact-sheet)
 
 ### HighlightedSearchResults.html
 With just a couple jQuery commands, you can make an application or profile in your search results easier to select. Instead of having to put the mouse pointer directly on the text of the hyperlink, a couple of event handlers can be used to make the entire row the 'clickable region' for that particular profile or application.
@@ -377,7 +377,7 @@ While this isn't going to look like something you want to have on your site, the
 ### DynamicProgramSearch.html
 This is an API driven program search that creates a dynamically adjusting list of program search results based on checkboxes getting marked. It uses the Google Maps API to create pins on a world map showing where there are programs that meet the criteria. It also uses a browser cookie to retain the user's last search so that it can be recreated when the user returns to the program search page. UPDATE: It will now support program parameters as search criteria with just a couple adjustments.
 
-> [Leveling-up the API-driven Program Search](http://sweitzephrenia.com/articles/2014/8/4/leveling-up-the-api-driven-program-search)
+> [LEVELING-UP THE API-DRIVEN PROGRAM SEARCH](http://sweitzephrenia.com/articles/2014/8/4/leveling-up-the-api-driven-program-search)
 
 ### MobileProgramSearch.html
 Here's how to use the Terra Dotta Software public API to implement a mobile-optimized program search on your site. Trust me, this can be done in less than five minutes.
