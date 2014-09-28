@@ -5,5 +5,10 @@
 		$('a[href="javascript:alert(\'This application is not ready for review..\')"]').each(function() {
 			$(this).parent().parent().css('display','none');
 		});
+		/* uncomment these lines to also hide the submitted reviews
+		$('b:contains("Review submitted:")').each(function() {
+			$(this).parent().parent().parent().css('display','none');
+		});
+		*/
 	});
 </script>
