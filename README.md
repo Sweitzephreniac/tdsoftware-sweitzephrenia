@@ -321,6 +321,11 @@ If you have a rolling admissions acceptance process for all your programs, you r
 
 > [DECISION DATE? DECISION DON'T!](http://sweitzephrenia.com/articles/2012/12/29/decision-date-decision-dont)
 
+### RemoveNotReadyApps.html
+The 'My Reviews' panel has an odd quirk to it. It displays the applications that aren't ready to be reviewed yet. If your reviewers have immediate access to review applications, that's not a problem, but if you want them to wait until you've marked the application as 'ready for review', there's no reason to have them displayed on the page. This script will hide the 'not ready for review' applications in that panel.
+
+> [REALLY READY FOR REVIEW](http://sweitzephrenia.com/articles/2014/8/30/really-ready-for-review)
+
 ### RemoveRankingFields.html
 So Terra Dotta got some feedback about the way that the 'Ranking' for outgoing programs is auto-enabled when you upgrade to TDS14, but do you really want yet another program-level setting that you have to go manipulate program by program? How about a script that not only hides the ranking interface on the applicant home page, but also corrects that awkward padding on the left side of the 'Applications' panel?
 
