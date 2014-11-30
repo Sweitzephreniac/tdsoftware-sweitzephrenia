@@ -153,6 +153,11 @@ While everyone has been sold on the use of templates when creating program broch
 
 > [ONE CLICK BROCHURE TEMPLATES](http://sweitzephrenia.com/articles/2013/9/27/one-click-brochure-templates)
 
+### ConnectingLCPAsessments.html
+Here's a script that connects a learning content page with an assessment so that you can automatically quiz an applicant on her/his comprehension of the material read as soon as it has been marked as such.
+
+> [AUTO-ASSESS YOUR APPLICANTS](http://sweitzephrenia.com/articles/2014/8/30/auto-assess-your-applicants)
+
 ### CraftyslidePage.html
 This script is essentially a jQuery plug-in created by Abid Din and his site has some pretty amazing stuff on it. I strongly recommend checking it out. The plug-in I'm including here is called Craftyslide, and it is very customizable. However, the really nice thing is that it has a really small footprint (about 2k).
 
