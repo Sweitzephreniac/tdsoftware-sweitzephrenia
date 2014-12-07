@@ -276,6 +276,11 @@ If you have an external CMS and would rather not force your users through a java
 
 > [THIS IS NOT MY BEAUTIFUL HOME PAGE](http://sweitzephrenia.com/articles/2012/12/1/this-is-not-my-beautiful-home-page)
 
+### CheckboxMultiselectQuestionItems.html
+Sometimes the multi-select question items are better displayed as a series of checkboxes rather than a multi-select listbox where you need to option-click each option after the first one and hope you didn't mess up the other options you've selected. This script will make that transformation.
+
+> [CHECK YOUR QUESTION ITEMS](http://sweitzephrenia.com/articles/2014/8/30/check-your-question-items)
+
 ### CustomHomeInstitutionFSCList.html *(file 1 of 2)*
 If you only allow external applicants from a distinct list of home institutions, you can use this javascript to make the selection list of home institutions only display a custom list of options instead of the entire list of US institutions.
 
