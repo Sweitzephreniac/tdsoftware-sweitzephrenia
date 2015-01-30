@@ -2,12 +2,18 @@
 	/* Tested in TDS 14.0 */
 	/* Append to text interface field# ??? */
 	$(document).ready(function() {
-		// look for the PrintTable1 id and go to the previous node
-		// look for all the input tags in that node and save their info into an array
-		// hide the content table of that node
+		var currentbuttons = new Array();
+		$('#PrintTable1').prev().find('input').each(function(){
+			if ($(this).attr('type') != 'hidden') {
+				currentbuttons.push('[' + $(this).attr("type") + '],[' + $(this).attr("onclick") + '],[' + $(this).val() + ']');
+			}
+		});
+		$('input[name="Program_ID"]').first().prev().css('display','none');
+		for (var i=0; i<currentbuttons.length(); i++) {
 		// loop through the array and build each new button
 			// if it's the 'print' button, do something better than reveal the lame interface
 			// if it's the 'you cannot apply button', DUH! ... don't display the apply now button
+		}
 	});
 </script>
 <style>
