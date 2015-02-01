@@ -5,17 +5,28 @@
 		var currentbuttons = new Array();
 		$('#PrintTable1').prev().find('input').each(function(){
 			if ($(this).attr('type') != 'hidden') {
-				currentbuttons.push('[' + $(this).attr("type") + '],[' + $(this).attr("onclick") + '],[' + $(this).val() + ']');
+				currentbuttons.push($(this).attr("type") + '|' + $(this).attr("onclick") + '|' + $(this).val());
 			}
 		});
 		$('input[name="Program_ID"]').first().prev().css('display','none');
-		for (var i=0; i<currentbuttons.length(); i++) {
+		var newhtml = '<div id="new-buttons">';
+		for (var i=0; i<currentbuttons.length; i++) {
 		// loop through the array and build each new button
+			var buttondata = currentbuttons[i].split('|');
 			// if it's the 'print' button, do something better than reveal the lame interface
 			// if it's the 'you cannot apply button', DUH! ... don't display the apply now button
+			newhtml = newhtml + '<div id="button' + i + '" class="brochure-button"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
 		}
+		$('#PrintTable1').prev().prepend(newhtml);
 	});
 </script>
 <style>
-	/* new button styles */
+	.brochure-button {
+		padding: 5px;
+		float: left;
+	}
+	.brochure-button input {
+		background-color: aquamarine;
+		font-size: 22px;
+	}
 </style>
