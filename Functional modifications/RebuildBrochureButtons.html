@@ -1,6 +1,6 @@
 <script>
 	/* Tested in TDS 14.0 */
-	/* Append to text interface field# ??? */
+	/* Append to text interface field#3 */
 	$(document).ready(function() {
 		var currentbuttons = new Array();
 		$('#PrintTable1').prev().find('input').each(function(){
@@ -11,22 +11,47 @@
 		$('input[name="Program_ID"]').first().prev().css('display','none');
 		var newhtml = '<div id="new-buttons">';
 		for (var i=0; i<currentbuttons.length; i++) {
-		// loop through the array and build each new button
 			var buttondata = currentbuttons[i].split('|');
-			// if it's the 'print' button, do something better than reveal the lame interface
-			// if it's the 'you cannot apply button', DUH! ... don't display the apply now button
-			newhtml = newhtml + '<div id="button' + i + '" class="brochure-button"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
+			if (buttondata[1].indexOf('You cannot apply') != -1) {
+				newhtml = newhtml + "<p>You cannot apply to this program.</p>"
+			} else if (buttondata[2] == 'Request Info' && i == 0) {
+				newhtml = newhtml + '<p>This program is not currently accepting applications.</p><div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
+			} else if (buttondata[2] == 'Print') {
+				// if it's the 'print' button, do something better than reveal the lame interface
+			} else {
+				newhtml = newhtml + '<div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
+			}
 		}
+		newhtml = newhtml + '</div>';
 		$('#PrintTable1').prev().prepend(newhtml);
 	});
 </script>
 <style>
 	.brochure-button {
-		padding: 5px;
-		float: left;
+		padding:5px;
+		float:left;
 	}
 	.brochure-button input {
-		background-color: aquamarine;
-		font-size: 22px;
+		box-shadow: 0px 1px 5px 0px #000000;
+		background-color:royalblue;
+		border-radius:6px;
+		border:1px solid darkblue;
+		color:#ffffff;
+		font-family:Arial;
+		font-size:15px;
+		padding:3px 12px;
+		text-decoration:none;
+		text-shadow:1px 1px 0px #528ecc;
+	}
+	#button0 input{
+		font-size:40px;
+		padding: 20px;
+	}
+	.brochure-button input:hover {
+		background-color:darkblue;
+	}
+	.brochure-button input:active{
+		position:relative;
+		top:2px;
 	}
 </style>
