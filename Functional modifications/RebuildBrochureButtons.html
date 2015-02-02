@@ -17,7 +17,8 @@
 			} else if (buttondata[2] == 'Request Info' && i == 0) {
 				newhtml = newhtml + '<p>This program is not currently accepting applications.</p><div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
 			} else if (buttondata[2] == 'Print') {
-				// if it's the 'print' button, do something better than reveal the lame interface
+				var printprogid = $('input[name="Program_ID"]').first().val();
+				newhtml = newhtml + '<div class="brochure-button" id="button' + i + '"><input type="button" onclick="window.open(\'index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + printprogid + '&DocType=html&orientation=portrait\',\'_blank\');" value="' + buttondata[2] + '" /></div>';
 			} else {
 				newhtml = newhtml + '<div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
 			}
