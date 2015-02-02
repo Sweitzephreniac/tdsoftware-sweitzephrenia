@@ -12,15 +12,19 @@
 		var newhtml = '<div id="new-buttons">';
 		for (var i=0; i<currentbuttons.length; i++) {
 			var buttondata = currentbuttons[i].split('|');
+			var basehtml = '<div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="';
 			if (buttondata[1].indexOf('You cannot apply') != -1) {
 				newhtml = newhtml + "<p>You cannot apply to this program.</p>"
-			} else if (buttondata[2] == 'Request Info' && i == 0) {
-				newhtml = newhtml + '<p>This program is not currently accepting applications.</p><div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
+			} else if (buttondata[1] == 'Request Info' && i == 0) {
+				newhtml = newhtml + '<p>This program is not currently accepting applications.</p>' + basehtml + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
 			} else if (buttondata[2] == 'Print') {
 				var printprogid = $('input[name="Program_ID"]').first().val();
-				newhtml = newhtml + '<div class="brochure-button" id="button' + i + '"><input type="button" onclick="window.open(\'index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + printprogid + '&DocType=html&orientation=portrait\',\'_blank\');" value="' + buttondata[2] + '" /></div>';
+				if (i == 0) {
+					newhtml = newhtml + '<p>This program is not currently accepting applications.</p>';
+				}
+				newhtml = newhtml + basehtml + 'window.open(\'index.cfm?FuseAction=Programs.ViewProgram&Program_ID=' + printprogid + '&DocType=html&orientation=portrait\',\'_blank\');" value="' + buttondata[2] + '" /></div>';
 			} else {
-				newhtml = newhtml + '<div class="brochure-button" id="button' + i + '"><input type="' + buttondata[0] + '" onclick="' + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
+				newhtml = newhtml + basehtml + buttondata[1] + '" value="' + buttondata[2] + '" /></div>';
 			}
 		}
 		newhtml = newhtml + '</div>';
@@ -41,7 +45,6 @@
 		font-family:Arial;
 		font-size:15px;
 		padding:3px 12px;
-		text-decoration:none;
 		text-shadow:1px 1px 0px #528ecc;
 	}
 	#button0 input{
