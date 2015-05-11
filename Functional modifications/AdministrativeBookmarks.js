@@ -1,4 +1,4 @@
-/* Tested in TDS 14.0 */
+/* Tested in TDS 15.0 */
 function bookmarking_button(bmcheck, admin_name) {
   if (not_bookmarked(admin_name)) {
 		var widget_html = '<center><input type="button" value="Add Bookmark" onclick="add_bookmark(\'' + bmcheck.charAt(3) + '\',\'' + admin_name + '\');"></center>';
