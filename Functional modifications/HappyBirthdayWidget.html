@@ -1,9 +1,10 @@
 <div id="birthdaycheck" style="display:none"></div>
 <script>
-	/* Tested in TDS 14.0 */
-	/* append to text interface fields#39 and 6511*/
+	/* Tested in TDS 15.0 */
+	/* append to text interface field#39 */
 	$(document).ready(function(){
-		$('#birthdaycheck').load('index.cfm?FuseAction=Students.ProfileEdit .date-label:first', function() {
+		var userid = $('input[name="User"]').val();
+		$('#birthdaycheck').load('index.cfm?FuseAction=Students.ProfileEdit&User=' + userid + ' .date-label:first', function() {
 			var cakeid = "#IMAGE ID OF BIRTHDAY CAKE#";
 			var userbd = new Date($.trim($('#birthdaycheck div').text()));
 			var currentdate = new Date();

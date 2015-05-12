@@ -1,5 +1,5 @@
 <script>
-	/* Tested in TDS 14.0 */
+	/* Tested in TDS 15.0 */
 	/* append this script to text interface field# 39 (Applicant home tips text) */
 	$(document).ready(function(){
 		var today = new Date();
@@ -10,7 +10,7 @@
 		if ($('h1:contains("No Image")').length > 0 && getCookie('photocheck') != today) {
 			document.cookie = "photocheck=" + today;
 			alert("You haven't uploaded a profile photo. Please upload an image of yourself so our staff can put a face to your name.");
-			window.location='index.cfm?FuseAction=Students.ProfileEdit';
+			$('input[value="Edit Profile"]').click();
 		}
 	});
 	function getCookie(cname) {
