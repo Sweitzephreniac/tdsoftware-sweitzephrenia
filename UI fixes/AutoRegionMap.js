@@ -1,4 +1,4 @@
-/* Tested in TDS 14.0 */
+/* Tested in TDS 15.0 */
 /* Build a hash table with all the linkages between country and region */
 autoRegionMap = new Object();
 autoRegionMap["Afghanistan"] = "Asia";
