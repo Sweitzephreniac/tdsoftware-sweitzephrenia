@@ -1,0 +1,47 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* Append to text interface field# 4445 */
+	$(document).ready(function () {
+		// get the current year
+		var today = new Date();
+		var curyear = today.getFullYear();
+		var cutoffyear = curyear - 2
+		// set the unchanged flag
+		var changed = 0;
+		// select all the rows in the table
+		$('table[summary="This table shows program dates."]').find('tr').each(function () {
+			// for each cell in each row, check to see if it matches a year more than a year in the past
+			var rowdata = $(this).find('td');		
+			var celldata = $(rowdata[1]).text().trim();
+			if (celldata.slice(4,5) == "-") {celldata = celldata.slice(0,4)}
+			if (celldata.length == 4) {
+				if (celldata <= cutoffyear) {
+					// if it is, then assign it the 'old year' class
+					$(this).addClass('old-year-row');
+					// check for a program date record notes row after it
+					if ($(this).next().find('td:contains("NOTE:")').length == 1) {
+						// if there is one, assign it the 'old year' class too
+						$(this).next().addClass('old-year-row');
+					}
+					// update the unchanged flag
+					changed = 1;
+				}
+			}
+		});
+		// did we change things?
+		if (changed = 1) {
+			// get rid of the gray background cells
+			$('table[summary="This table shows program dates."]').find('.bg-gray-color').removeClass('bg-gray-color').addClass('bg-white-color');
+			// hide the old year class elements
+			$('.old-year-row').css('display','none');
+			// create the button for the toggle
+			$('table[summary="This table shows program dates."]').find('tbody').append('<tr>,<td colspan="8" class="left-bdr "><input type="button" value="toggle older date records" id="date-toggle" /></td></tr>');
+			$('#date-toggle').click(function () {
+				toggleDates();
+			});
+		}
+	});
+	function toggleDates() {
+		$('.old-year-row').toggle();
+	}
+</script>

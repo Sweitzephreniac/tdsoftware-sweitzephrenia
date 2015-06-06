@@ -1,10 +1,11 @@
 <script>
-	/* Tested in TDS 14.0 */
+	/* Tested in TDS 15.0 */
 	/* this script should be appended to text interface field#6511 (admin home tips text) */
 
 	/* id number of the saved report which should have no groupings and have two fields in the output, the application ID# and the status of the application */
-	var db_reportid = #ID_NUMBER_FOR_REPORT_GOES_HERE#
-
+	var db_reportid = #ID_NUMBER_FOR_REPORT_GOES_HERE#;
+	var db_searchid = #ID_NUMBER_FOR_SEARCH_GOES_HERE#;
+	
 	// string with today's date
 	var today = new Date();
 	var dd = today.getDate();
@@ -58,7 +59,7 @@
 
 	function get_data() {
 		$('#rightColumnInside').append('<div id="db_results" style="display: none;"></div>');
-		$('#db_results').load('index.cfm?FuseAction=Administration.ReportWizard_2&Report_ID=' + db_reportid + ' table[cellpadding="4"]', function() {
+		$('#db_results').load('index.cfm?FuseAction=Administration.ReportWizard_2&Report_ID=' + db_reportid + '&Search_ID=' + db_searchid + ' table[cellpadding="4"]', function() {
 			localStorage.clear();
 			localStorage.setItem("DashboardDate", today);
 			$('#db_results tr').each(function(index) {

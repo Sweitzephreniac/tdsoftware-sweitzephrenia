@@ -1,4 +1,4 @@
-/* Tested in TDS 14.0 */
+/* Tested in TDS 15.0 */
 /* This file should be uploaded to the document center as a .js file */
 function initialize_editor() {
 	// remove the existing report styles

@@ -1,0 +1,48 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* Add to text interface field # 259 */
+	/* Add <input type="hidden" name="custom-UI" value="checkboxes" /> to question item instructions to activate */
+	$(document).ready(function () {
+		// check for any multi-select questions tagged to be checkboxes
+		$('input[name="custom-UI"]').each(function () {
+			if ($(this).val() == "checkboxes") {
+				// grab the checkbox options that will be necessary
+				var qstName = $(this).parent().next().find('select').attr('name');
+				var qstOptions = new Array();
+				var selOptions = new Array();
+				$(this).parent().next().find('option').each( function() {
+					qstOptions.push($(this).val() + "|" + $(this).text().trim());
+					if ($(this).attr('selected') == "selected") {
+						selOptions.push($(this).val() + "|" + $(this).text().trim());
+					}
+				});
+				// hide the existing listbox
+				$(this).parent().next().find('select').css('display','none');
+				// build the new checkbox interface
+				$(this).parent().next().prepend('<div name="custom-UI-' + qstName + '"></div>');
+				for (var i=0; i < qstOptions.length; i++) {
+					if (i > 0) {
+						$('div[name="custom-UI-' + qstName + '"]').append('<br />');
+					}
+					var inpOptions = qstOptions[i].split('|');
+					$('div[name="custom-UI-' + qstName + '"]').append('<label><input type="checkbox" name="' + inpOptions[1] + '" value="' + inpOptions[0] + '">' + inpOptions[1] + '</label>');
+					if (selOptions.indexOf(qstOptions[i]) != -1) {
+						$('div[name="custom-UI-' + qstName + '"]').find('input[name="' + inpOptions[1] + '"]').prop('checked', true);
+					}
+				}			
+				// assign the event handlers to the checkboxes to keep the existing listbox updated
+				$('div[name="custom-UI-' + qstName + '"]').find('input').change(function () {
+					checkboxChange($(this).parent().parent().attr('name'), $(this).val());
+				});
+			}
+		});
+	});
+	function checkboxChange (questionitem, valuechanged) {
+		// this will be the event handler for the changed checkboxes
+		var isselected = false;
+		if ($('div[name="' + questionitem + '"]').find('input[value="' + valuechanged + '"]').prop('checked') == true) {
+			isselected = true;
+		}
+		$('div[name="' + questionitem + '"]').next().find('option[value="' + valuechanged + '"]').prop('selected',isselected);
+	}
+</script>

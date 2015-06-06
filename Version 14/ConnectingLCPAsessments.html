@@ -1,0 +1,31 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* Append to text interface field# 56 (for pre-decision) */
+	var linkedLCPAsmnts = [
+		['NAME OF LCP','NAME OF ASSESSMENT']
+	];
+	$(document).ready(function () {
+		$('a[href*="FuseAction=Students.ContentView"]').each(function () {
+			for (var i=0; i < linkedLCPAsmnts.length; i++) {
+				if ($(this).text() == linkedLCPAsmnts[i][0]) {
+					if ($(this).parent().next().find('div').attr('title') == 'Not Read') {
+						$('a[href*="FuseAction=Assessments.Preface"]').each(function () {
+							if ($(this).text() == linkedLCPAsmnts[i][1]) {
+								$(this).parent().parent().css('display','none');
+							}
+						});
+					} else {
+						$('a[href*="FuseAction=Assessments.Preface"]').each(function () {
+							if ($(this).text() == linkedLCPAsmnts[i][1]) {
+								if ($(this).parent().next().find('div').attr('title') == 'Not Taken') {
+									alert('You have completed the learning content page "' + linkedLCPAsmnts[i][0] + '". Please complete the assessment "' + linkedLCPAsmnts[i][1] + '".');
+									window.location.href = $(this).attr('href');
+								}
+							}
+						});
+					}
+				}
+			}
+		});
+	});
+</script>

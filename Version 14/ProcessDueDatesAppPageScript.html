@@ -1,0 +1,64 @@
+<script>
+	/* Tested in TDS 14.0 */
+	/* Append to text interface field#56 for pre-decision / 12318 for post-decision */
+	// get the current date
+	var currentdate = new Date();
+	$(document).ready(function () {
+		// get the application's term and year
+		var appcycle = $('th:contains("Term/Year:")').next().text().split(',');
+		var apptermyear = appcycle[0].trim() + "," + appcycle[1].trim();
+		// create the home page check object
+		$('#sa_content').prepend('<div id="home-page-check" style="display: none;"></div>');
+		// check to see if there are deadlines for any process elements for the term/year		
+		$('.process-due-date').each(function () {
+			var duedatedata = $(this).val().split('|');
+			if (duedatedata[1] == apptermyear) {
+				var status = $('a:contains("' + duedatedata[0] + '")').parent().next().find('div').attr('title');
+				if (status == "Not Received" || status == "This questionnaire is incomplete." || status == "Not Read" || status == "Not Taken") {
+					processcheck(duedatedata);
+				}
+			}
+		});		
+		// put an alert/warning at the top of the page
+		if ($('.duedate-alert').length > 0) {
+			$("#sa_content").prepend('<div class="SA_error custom-panel"><div class="sprites_icons ico_icon_error mar-15 align-top"></div><div class="inline_display alert-content">You have past due requirements to this application.</div></div>');
+		}
+		if ($('.duedate-warning').length > 0) {
+			$("#sa_content").prepend('<div class="SA_warning custom-panel"><div class="sprites_icons ico_icon_warning mar-15 align-top"></div><div class="inline_display alert-content">You have requirements to this application that are due within the next week.</div></div>');
+		}
+	});
+	function processcheck(processElement) {
+		var datearray = processElement[2].split('/');
+		var duedate = new Date(datearray[2],datearray[0]-1,datearray[1]);
+		var elementhtml = $('a:contains("' + processElement[0] + '")').parent().append('<span class="duedate">Due by: ' + processElement[2] + '</span>');
+		// is the deadline today or in the past - put up alert
+		if (duedate < currentdate) {
+			// alert
+			elementhtml.find('span').removeClass('duedate').addClass('duedate-alert');
+		} else if (duedate - 604800000 < currentdate) {
+			//the deadline in the next week - put up warning
+			elementhtml.find('span').removeClass('duedate').addClass('duedate-warning');
+		}
+	}
+</script>
+<style>
+	.duedate-alert {
+		color: #D8000C;
+		background-color: #FFBABA;
+		font-weight: bold;
+	}
+	.duedate-warning {
+		color: #9F6000;
+		background-color: #FEEFB3;
+		font-weight: bold;
+	}
+	.duedate {
+		color: #00529B;
+		background-color: #BDE5F8;
+	}
+	span[class*="duedate"] {
+		padding: 1px 5px 2px 5px;
+		white-space: nowrap;
+		border-radius: 10px;
+	}
+</style>
