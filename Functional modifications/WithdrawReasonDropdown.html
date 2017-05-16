@@ -1,9 +1,10 @@
 <script>
-	/* Tested in TDS 15.0 */
-	/* append to text interface field # 351 */
+	/* Tested in TDS 17.0 */
+	/* append to text interface field # 351 - change line 6 to var numofreasons = 'multiple'; to enable multi-select*/
 	$(document).ready(function() {
 		var reasonarray = ["financial","course credit","just cuz"];
-		$('#taComments').parent().css('display','none').before('<div class="padding left-bdr rightbdr"><select id="reasondd"></select></div>');
+		var numofreasons = 'single';
+		$('#taComments').parent().css('display','none').before('<div class="panel-body"><div class="col-md-6"><select class="form-control" id="reasondd"></select></div></div>');
 		for (var i=0; i < reasonarray.length; i++) {
 			$('#reasondd').append('<option value="' + reasonarray[i] + '">' + reasonarray[i] + '</option>');
 		}
@@ -15,5 +16,6 @@
 				$('#taComments').val('').parent().css('display','block');
 			}
 		});
+		if (numofreasons == 'multiple') {$('#reasondd').attr('multiple','multiple');};
 	});
 </script>
